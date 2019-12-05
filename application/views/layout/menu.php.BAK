@@ -1,0 +1,79 @@
+ <ul class="nav nav-pills nav-stacked main-menu">
+                        <!--<li class="nav-header">Main</li>
+                        <li><a class="ajax-link" href="index.html"><i class="glyphicon glyphicon-home"></i><span> Dashboard</span></a>
+                        </li>
+                        <li><a class="ajax-link" href="ui.html"><i class="glyphicon glyphicon-eye-open"></i><span> UI Features</span></a>
+                        </li>
+                        <li><a class="ajax-link" href="form.html"><i
+                                    class="glyphicon glyphicon-edit"></i><span> Forms</span></a></li>
+                        <li><a class="ajax-link" href="chart.html"><i class="glyphicon glyphicon-list-alt"></i><span> Charts</span></a>
+                        </li>
+                        <li><a class="ajax-link" href="typography.html"><i class="glyphicon glyphicon-font"></i><span> Typography</span></a>
+                        </li>
+                        <li><a class="ajax-link" href="gallery.html"><i class="glyphicon glyphicon-picture"></i><span> Gallery</span></a>
+                        </li>
+                        <li class="nav-header hidden-md">Sample Section</li>
+                        <li><a class="ajax-link" href="table.html"><i
+                                    class="glyphicon glyphicon-align-justify"></i><span> Tables</span></a></li>
+                        <li class="accordion">
+                            <a href="#"><i class="glyphicon glyphicon-plus"></i><span> Accordion Menu</span></a>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="#">Child Menu 1</a></li>
+                                <li><a href="#">Child Menu 2</a></li>
+                            </ul>
+                        </li>
+                        <li><a class="ajax-link" href="calendar.html"><i class="glyphicon glyphicon-calendar"></i><span> Calendar</span></a>
+                        </li>
+                        <li><a class="ajax-link" href="grid.html"><i
+                                    class="glyphicon glyphicon-th"></i><span> Grid</span></a></li>
+                        <li><a href="tour.html"><i class="glyphicon glyphicon-globe"></i><span> Tour</span></a></li>
+                        <li><a class="ajax-link" href="icon.html"><i
+                                    class="glyphicon glyphicon-star"></i><span> Icons</span></a></li>
+                        <li><a href="error.html"><i class="glyphicon glyphicon-ban-circle"></i><span> Error Page</span></a>
+                        </li>
+                        <li><a href="login.html"><i class="glyphicon glyphicon-lock"></i><span> Login Page</span></a>
+                        </li>-->  
+                        <?php
+						$webmaster_grup=$this->session->userdata('webmaster_grup');
+						 $q=GetAll('menu',array('id_parents'=>'where/0'));
+						if($q->num_rows()>0){
+						foreach($q->result() as $hasil){
+							if($webmaster_grup=='2706'){$allow=1;}else{
+							$cek=GetAll('menu_auth',array('id_menu_admin'=>'where/'.$hasil->id,'id_admin_grup'=>'where/'.$webmaster_grup,'is_active'=>'where/Active'));
+								if($cek->num_rows>0)$allow=1;
+								else $allow=0;
+							}
+							if($allow==1){
+							?>
+                        <li class="accordion">
+                            <a href="<?php echo base_url($hasil->filez)?>"><i class="<?php echo $hasil->icon?>"></i><span> <?php echo $hasil->title?></span></a>
+                            <ul class="nav nav-pills nav-stacked">
+                            	<?php $q2=GetAll('menu',array('id_parents'=>'where/'.$hasil->id));
+						if($q2->num_rows()>0){
+						foreach($q2->result() as $hasil2){
+							if($webmaster_grup=='2706'){$allow=1;}else{
+							$cek2=GetAll('menu_auth',array('id_menu_admin'=>'where/'.$hasil2->id,'id_admin_grup'=>'where/'.$webmaster_grup,'is_active'=>'where/Active'));
+								if($cek2->num_rows>0)$allow=1;
+								else $allow=0;
+							}
+							if($allow==1){
+							?>
+                                <li><a href="<?php echo base_url($hasil2->filez)?>"><i class="<?php echo $hasil2->icon?>"></i> <?php echo $hasil2->title?></a></li>
+                   			<?php }}}?>             
+                                
+                            </ul>
+                        </li>
+                        <?php }}}?>
+						<?php if($this->session->userdata('user_type')=='superuser'){?>
+                        <li class="accordion">
+                            <a href="#"><i class="glyphicon glyphicon-wrench"></i><span> Super User Menu</span></a>
+                            <ul class="nav nav-pills nav-stacked">
+                                <li><a href="<?php echo base_url()?>admin"><i class="glyphicon glyphicon-user"></i> Admin Management</a></li>
+                                <li><a href="<?php echo base_url()?>admin_grup"><i class="glyphicon glyphicon-user"></i> Admin Grup</a></li>
+                                <li><a href="<?php echo base_url()?>menu"><i class="glyphicon glyphicon-list"></i> Menu</a></li>
+                                <li><a href="<?php echo base_url()?>menu_auth"><i class="glyphicon glyphicon-warning-sign"></i> Menu Authorization</a></li>
+                            </ul>
+                        </li>
+                        <?php }?>
+                    </ul>
+                    <!--<label id="for-is-ajax" for="is-ajax"><input id="is-ajax" type="checkbox"> Ajax on menu</label>-->

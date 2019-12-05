@@ -1,0 +1,16 @@
+<?php $q2=GetAll('menu',array('id_parents'=>'where/'.$hasil->id,'sort'=>'order/ASC','is_active'=>'where/Active'));
+							if($q2->num_rows()>0){?>
+						<ul class="submenu">
+						<?php
+								foreach($q2->result() as $hasil2){
+									if($webmaster_grup=='2706'){$allow=1;}else{
+										$cek2=GetAll('menu_auth',array('id_menu_admin'=>'where/'.$hasil2->id,'id_admin_grup'=>'where/'.$webmaster_grup,'is_active'=>'where/Active'));
+										if($cek2->num_rows>0)$allow=1;
+										else $allow=0;
+									}
+									if($allow==1){
+									?>
+									<li><a href="<?php echo base_url($hasil2->filez)?>"><i class="<?php echo $hasil2->icon?>"></i> <?php echo $hasil2->title?></a></li>
+								<?php }}?>             
+						
+							</ul><?php }?>
