@@ -1,10 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*************************************
-  * Created : May 2015
+  * Created : December 2019
   * Creator : Fauzan Rabbani
   * Email   : jhanojan@gmail.com
-  * Framework ver. : CI ver.2.0
+  * Framework ver. : CI ver.3.1.11
 *************************************/	
 
 class payment extends CI_Controller {
@@ -15,8 +15,8 @@ class payment extends CI_Controller {
 	{
 		parent::__construct();permissionBiasa();
 		$this->load->library('flexigrid');
-        $this->load->helper('flexigrid');
-error_reporting(0);
+                $this->load->helper('flexigrid');
+                error_reporting(0);
 	}
 	
 	function index()
@@ -149,12 +149,19 @@ error_reporting(0);
 			$data['type']='New';
 		}
 		$data['opt']=GetOptAll('menu','-Parents-');
-		$data['content'] = 'contents/'.$this->utama.'/edit';
+                
 		$data['opt_coa']=GetOptAll('setup_coa','-Account-',array('level >'=>'where/1'),'code','code','name');
 		//End Global
 		$data['history']=GetAll('sv_payment',array('invoice'=>'where/'.$id))->result_array();
 		//Attendance
+		$data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array('id'=>'where/abaceafe'));
+                $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array('id'=>'where/abaceafe'));
 		
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
+                
+		$data['content'] = 'contents/'.$this->utama.'/view';
 		$this->load->view('layout/main',$data);
 	}
 	
@@ -217,6 +224,48 @@ error_reporting(0);
 		redirect('cash_ledger/form/'.$data['invoice'].'/payment/'.$id);
 		
 	}
+    function loadbill($siswa){
+        $data['qbill']=$this->db->query("SELECT * FROM sv_bill WHERE siswa_id='$siswa' AND status='unpaid' ORDER BY id ASC ")->result_array();
+        $this->load->view('contents/payment/bill_list',$data);
+    }
+    function item_bill($s){
+        
+        $data['qbill']=$this->db->query("SELECT * FROM sv_bill WHERE id='$s' ")->row_array();
+        $data['qbilld']=$this->db->query("SELECT * FROM sv_bill_detail WHERE bill_id='$s' ")->result_array();
+        $data['billprice']=$this->db->query("SELECT SUM(nominal) as price FROM sv_bill_detail WHERE bill_id='$s' ")->row_array();
+        $this->load->view('contents/payment/bill_item',$data);
+        
+    }
+    function submit_pay(){
+        //print_mz($this->input->post());
+        $bill=$this->input->post('id_bill');
+        $data['no_payment']=strtotime(date('Y-m-d')).rand(111,999);
+        $data['total']=$this->input->post('total');
+        $data['bayar']=$this->input->post('bayar');
+        $data['kembali']=$this->input->post('kembali');
+        $data['metode']=$this->input->post('metode');
+        $data['bank']=$this->input->post('bank');
+        $data['created_on']=date("Y-m-d H:i:s");
+        $data['created_by']='sysadmin';
+        
+        $data['bill_id']=json_encode($bill);
+        
+        $this->db->insert('sv_bill_payment',$data);
+        $iid=$this->db->insert_id();
+        $bill=implode(',',$bill);
+        $this->db->query("UPDATE sv_bill SET status='paid' WHERE id IN ($bill)");
+        redirect("payment/sumpayment/".$iid);
+    }
+    function sumpayment($id){
+                $data['datapay']=GetAll('bill_payment',array('id'=>'where/'.$id))->row_array();
+                $data['content'] = 'contents/'.$this->utama.'/view_sum';
+		$this->load->view('layout/main',$data);
+    }
+    function cetak_kwtiansi($id){
+                $data['datapay']=GetAll('bill_payment',array('id'=>'where/'.$id))->row_array();
+                $data['content'] = 'contents/'.$this->utama.'/kwitansi';
+		$this->load->view( 'contents/'.$this->utama.'/kwitansi',$data);
+    }
 	
 }
 ?>

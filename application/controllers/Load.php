@@ -201,7 +201,7 @@ class Load extends CI_Controller {
         function loadkelas($tingkat,$ids=null){
             if($ids!=null)$ids=rand(111,9999);
             
-            echo form_dropdown('kelas',GetOptAll('master_kelas','-Kelas-',array('tingkat'=>'where/'.$tingkat)),(isset($val['kelas']) ? $val['kelas'] : ''),"class='select2' id='kelas$ids'");
+            echo form_dropdown('kelas',GetOptAll('master_kelas','-Kelas-',array('tingkat'=>'where/'.$tingkat)),(isset($val['kelas']) ? $val['kelas'] : ''),"class='select2' onchange='changekelas(this.value)' id='kelas$ids'");
                        echo "<script>
                             $(document).ready(function(e){ 
                                     $('#kelas$ids').css('width','200px').select2({allowClear:true});
@@ -212,6 +212,40 @@ class Load extends CI_Controller {
 					 else $('.select2').removeClass('tag-input-style');
 				});
                             });
+                             function changekelas(vs){
+                                var ta=$('#tahun_ajaran').val();
+                                $('#siswadiv').load('".base_url()."load/loadsiswa/'+vs+'/'+ta+'/$ids',{},function(e){
+                         
+                                });
+                            }
+                        </script>";
+        }
+        function loadsiswa($tingkat,$ta,$ids=null){
+            if($ids!=null)$ids=rand(111,9999);
+            $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id WHERE sv_a.ta='".$ta."' AND sv_a.kelas='".$tingkat."' ORDER BY b.nama_siswa")->result_array();
+            $opt_all['']="-Siswa-";
+            foreach($siswa as $ss){
+                $opt_all[$ss['siswa_id']]=GetValue('nama_siswa','master_siswa',array('id'=>'where/'.$ss['siswa_id']));
+            }
+            echo form_dropdown('kelas',$opt_all,(isset($val['siswa']) ? $val['siswa'] : ''),"class='select2' id='siswa$ids' onchange='gantisiswa(this.value)'");
+                       echo "<script>
+                            $(document).ready(function(e){ 
+                                    $('#siswa$ids').css('width','200px').select2({allowClear:true});
+                                        $('#select2-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which === 2) $('.select2').addClass('tag-input-style');
+					 else $('.select2').removeClass('tag-input-style');
+				});
+                            });
+                            function gantisiswa(vs){
+                                $('.inv_item').empty();
+                                
+                                hitungtotal();
+                                $('#billdiv').load('".base_url()."payment/loadbill/'+vs+'/$ids',{},function(e){
+                         
+                                });
+                            }
                         </script>";
         }
 }

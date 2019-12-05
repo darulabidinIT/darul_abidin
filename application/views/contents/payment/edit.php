@@ -32,7 +32,7 @@ if($val['status']=='L'){
         
     </div>
     	<div class="box-content">
-		<div class="col-md-7">
+		<div class="col-md-7 col-sm-12">
 			<form id="form" method="post" enctype="multipart/form-data" action="<?php echo base_url($this->utama)?>/submit" class="form-horizontal formular" role="form">
 				<?php echo form_hidden('invoice',isset($val['id']) ? $val['id'] : '')?>
 		   
@@ -88,7 +88,7 @@ if($val['status']=='L'){
              </div>
 			 </form>
     	</div>
-		<div class="col-md-5">
+		<div class="col-md-5 col-sm-12">
 		<h4>Payment History</h4>
 			<table class="table table-striped table-bordered bootstrap-datatable responsive">
 				<thead>

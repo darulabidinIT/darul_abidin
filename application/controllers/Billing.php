@@ -2,9 +2,159 @@
 class Billing extends CI_Controller {
 		
 		
+		var $utama ='billing';
+		var $title ='Billing';
 		function __construct(){
 				parent::__construct();
+                                $this->load->library('flexigrid');
+                                $this->load->helper('flexigrid');
 		}
+                
+                
+	function index()
+	{
+		$this->main();
+	}
+	
+	function main()
+	{
+		//Migrasi 1 Feb 14
+		//permissionBiasa();
+		//Set Global
+		//permission();
+		//$data = GetHeaderFooter();
+		$data['content'] = 'contents/'.$this->utama.'/view';
+		
+		$data['js_grid']=$this->get_column();
+		//$data['list']=GetAll($this->utama);
+		//End Global
+		
+		//Attendance
+		
+		$this->load->view('layout/main',$data);
+	}
+        function listcol(){
+		
+            $colModel['idnya'] = array('ID',50,TRUE,'left',2,TRUE);
+            $colModel['id'] = array('ID',100,TRUE,'left',2,TRUE);
+            $colModel['title'] = array('Bill',150,TRUE,'left',2);
+            $colModel['siswa_'] = array('Siswa',150,TRUE,'left',2);
+            $colModel['kelas_'] = array('Kelas',150,TRUE,'left',2);
+            $colModel['status'] = array('Status',150,TRUE,'left',2);
+			return $colModel;
+	}
+        
+	function get_column(){
+	
+            $colModel=$this->listcol(); 
+        
+            $gridParams = array(
+                'rp' => 29,
+                'rpOptions' => '[10,20,30,40]',
+                'pagestat' => 'Displaying: {from} to {to} of {total} items.',
+                'blockOpacity' => 0.5,
+                'title' => '',
+                'showTableToggleBtn' => TRUE
+		);
+        
+           $buttons[] = array('select','check','btn');
+            $buttons[] = array('deselect','uncheck','btn');
+            $buttons[] = array('separator');
+            //$buttons[] = array('add','add','btn');
+            //$buttons[] = array('separator');
+             //$buttons[] = array('edit','edit','btn');
+            //$buttons[] = array('delete','delete','btn');
+            //$buttons[] = array('separator');
+		
+            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record"),$colModel,'id','asc',$gridParams,$buttons);
+	}
+	
+	function get_flexigrid()
+        {
+
+            //Build contents query
+            $this->db->select("sv_a.*,b.nama_siswa siswa_,d.title kelas_")->from('sv_bill sv_a');
+            $this->db->join('sv_master_siswa b', "sv_a.siswa_id=b.id", 'left');
+            $this->db->join('sv_kelas_siswa c', "sv_a.siswa_id=c.siswa_id and sv_a.ta=c.ta", 'left');
+            $this->db->join('sv_master_kelas d', "c.kelas = d.id", 'left');
+            $this->db->order_by('c.kelas', "asc");
+            $this->db->order_by('b.nama_siswa', "asc");
+            $this->flexigrid->build_query();
+
+            //Get contents
+            $return['records'] = $this->db->get();
+
+            //Build count query
+            $this->db->select("count(id) as record_count")->from('sv_bill');
+            $this->flexigrid->build_query(FALSE);
+            $record_count = $this->db->get();
+            $row = $record_count->row();
+
+            //Get Record Count
+            $return['record_count'] = $row->record_count;
+
+            //Return all
+            return $return;
+        }
+	
+	function get_record(){
+		
+            $colModel=$this->listcol(); 
+		$valid_fields = array('id','code','name');
+
+            $this->flexigrid->validate_post('id','DESC',$valid_fields);
+            $records = $this->get_flexigrid();
+
+            $this->output->set_header($this->config->item('json_header'));
+
+            $record_items = array();
+
+			$a=0;
+           foreach ($records['records']->result() as $row)
+            {/*
+			if($row->status=='y'){$status='Aktif';}
+			elseif($row->status=='n'){$status='Tidak Aktif';}
+			elseif($row->status=='s'){$status='Suspended';}*/ 
+			
+				$record_items[$a][]=$row->id;
+				$record_items[$a][]=$row->id;
+				$record_items[$a][]=$row->id;
+				$b=2;
+				foreach($colModel as $key=>$cm){
+					if($key=='auth'){
+                                        $record_items[$a][$b]="<a href='".base_url()."master_bank/auth/$row->id'>Menu</a>";
+                                        
+                                        }elseif($key=='prospek'){
+                                        $record_items[$a][$b]="<a href='".base_url()."master_bank/prospek/$row->id'>Prospek Ref</a>";
+                                        
+                                        }
+					elseif($key=='username'){
+                                        $record_items[$a][$b]=GetValue('username','sv_admin',array('marketing'=>'where/'.$row->id));
+                                        
+                                        }
+					elseif($key!='idnya' && $key!='id' && $key!='username'){
+                                        $record_items[$a][$b]=$row->$key;}
+				$b++;
+				}
+						$a++;
+            }
+
+            return $this->output->set_output($this->flexigrid->json_build($records['record_count'],$record_items));;
+	}  
+
+	function deletec()
+	{		
+		//return true;
+		$countries_ids_post_array = explode(",",$this->input->post('items'));
+		array_pop($countries_ids_post_array);
+		foreach($countries_ids_post_array as $index => $country_id){
+			/*if (is_numeric($country_id) && $country_id > 0) {
+				$this->delete($country_id);}*/
+			$this->db->delete($this->utama,array('id'=>$country_id));				
+		}
+		//$error = "Selected countries (id's: ".$this->input->post('items').") deleted with success. Disabled for demo";
+		//echo "Sukses!";
+	}
 		function renderdropdown($id=NULL){
 				$side=GetAll('sv_menu',array('id_parents'=>'where/'.(int)$id,'sort'=>'order/ASC','is_active'=>"where/Active"));
 				$data['menu']=$side->result();
@@ -269,6 +419,75 @@ class Billing extends CI_Controller {
         }
         else{
             echo "Billing sudah ada";
+        }
+        }
+        function generate_billing($id=null,$month=true,$mid=null,$yid=null){
+            $q="SELECT * FROM sv_kelas_siswa WHERE item_spp IS NOT NULL";
+            
+            $queries=$this->db->query($q)->result_array();
+            foreach($queries as $query){
+                
+            if($mid==null){
+                //$mid=date('m');
+                $mid = date('m', strtotime('+1 month'));
+                $yid = date('Y', strtotime('+1 month'));
+            }
+            $periodes=$this->db->query("SELECT * FROM sv_bill_periode WHERE id<=6")->result_array();
+            foreach($periodes as $periode){
+            //$periode=GetAll('bill_periode',array('real_month'=>'where/'.(int)$mid))->row_array();
+            //
+            //$cekspp=$this->db->query("");
+                $mid=$periode['real_month'];
+                $yid=2019;
+            $es=$this->db->query("SELECT * FROM sv_bill WHERE ta='".$query['ta']."' AND periode='".$periode['id']."' AND siswa_id='".$query['siswa_id']."' AND status='unpaid'");
+            if($es->num_rows()==0){
+            $bill=array(
+                'type'=>'spp',
+                'ta'=>$query['ta'],
+                'periode'=>$periode['id'],
+                'siswa_id'=>$query['siswa_id'],
+                'no_bill'=>$periode['id'].$query['siswa_id'],
+                'title'=>'SPP '.$periode['title']." ".$yid,
+                'generate_date'=>date('Y-m-d'),
+                'due_date'=>$yid.'-'.$mid.'-15',
+                'created_by'=>'systemgenerated',
+                'created_on'=>date("Y-m-d H:i:s")
+            );
+            $this->db->insert('sv_bill',$bill);
+            $iid=$this->db->insert_id();
+            
+                   $itemspp=json_decode($query['item_spp']);  
+                foreach($itemspp->item as $it) {
+                    $itempay=GetAll('setup_itempay',array('id'=>'where/'.$it))->row_array();
+                    $bill_detail=array(
+                        'bill_id'=>$iid,
+                        'type'=>$itempay['type'],
+                        'item'=>$itempay['title'],
+                        'nominal'=>$itempay['price'],
+                    );
+                    $this->db->insert('sv_bill_detail',$bill_detail);
+                }
+                foreach($itemspp->custom as $it) {
+                    
+                    $itempay=GetAll('ref_item_custom',array('id'=>'where/'.$it->item))->row_array();
+                    //print_r($it);
+                    //$data['item_']=$it->item;
+                    //$data['item_price']=$it->price;
+                    $bill_detail=array(
+                        'bill_id'=>$iid,
+                        'type'=>$it->item,
+                        'item'=>$itempay['title'],
+                        'nominal'=>$it->price,
+                    );
+                    $this->db->insert('sv_bill_detail',$bill_detail);
+                }
+        }
+        else{
+            echo "Billing sudah ada";
+            }
+            }
+            
+            
         }
         }
 }
