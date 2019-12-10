@@ -75,21 +75,7 @@
      
      <div class="col-md-8 invoice" ><h3>Total Price</h3></div>
      <div class="col-md-4 invoice" ><h3><input value="0" name="total" id="total" style="background:white!important;border:0px; max-width: 90%;" class="" readonly=""></h3></div>
-     <!--table>
-         <tr>
-             <th>Item</th>
-             <th>Price</th>
-         </tr>
-         <tr id="itemci">
-             <td></td>
-             <td></td>
-         </tr>
-         
-         <tr>
-             <td><b><h3>Total Price</h3></b></td>
-             <td><b><h3>0</h3></b></td>
-         </tr>
-     </table-->
+     
      
      <div class="col-md-12">
          <div class="col-md-3">Bayar</div> <div class="col-md-6"><input required="" type="number" name="bayar" class="form-control" onkeyup="liatkembalian(this.value)"></div>

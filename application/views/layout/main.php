@@ -250,9 +250,13 @@
 <script src="<?php echo base_url('assets')?>/ace/js/ace/elements.typeahead.js"></script>
 <script src="<?php echo base_url('assets')?>/ace/js/jquery.dataTables.js"></script>
 <script src="<?php echo base_url('assets')?>/ace/js/ace/ace.ajax-content.js"></script>
-<script src="<?php echo base_url('assets')?>/highcharts/js/highcharts.js"></script>
-<script src="<?php echo base_url('assets')?>/highcharts/js/modules/data.js"></script>
-<script src="<?php echo base_url('assets')?>/highcharts/js/modules/drilldown.js"></script>
+                <script src="<?php echo base_url('assets')?>/highcharts/js/highcharts.js"></script>
+                <script src="<?php echo base_url('assets')?>/highcharts/js/modules/data.js"></script>
+                <script src="<?php echo base_url('assets')?>/highcharts/js/modules/drilldown.js"></script>
+                
+                <script src="<?php echo base_url('assets')?>/highcharts/js/modules/series-label.js"></script>
+                <script src="<?php echo base_url('assets')?>/highcharts/js/modules/exporting.js"></script>
+                <script src="<?php echo base_url('assets')?>/highcharts/js/modules/export-data.js"></script>
 		<script src="<?php echo base_url('assets')?>/ace/js/ace/elements.scroller.js"></script>
 		<script src="<?php echo base_url('assets')?>/ace/js/ace/elements.colorpicker.js"></script>
 		<script src="<?php echo base_url('assets')?>/ace/js/ace/elements.fileinput.js"></script>
