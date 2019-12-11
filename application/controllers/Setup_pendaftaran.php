@@ -4,13 +4,13 @@
   * Created : December 2019
   * Creator : Fauzan Rabbani
   * Email   : jhanojan@gmail.com
-  * Framework ver. : CI ver.3.1.1
+  * Framework ver. : CI ver.3.1.11
 *************************************/	
 
-class Master_siswa extends CI_Controller {
+class Setup_pendaftaran extends CI_Controller {
 	
-		var $utama ='master_siswa';
-		var $title ='Master Siswa';
+		var $utama ='setup_pendaftaran';
+		var $title ='Setup Harga Pendaftaran';
 	function __construct()
 	{
 		parent::__construct();permissionz();
@@ -40,10 +40,12 @@ class Master_siswa extends CI_Controller {
 		
             $colModel['idnya'] = array('ID',50,TRUE,'left',2,TRUE);
             $colModel['id'] = array('ID',100,TRUE,'left',2,TRUE);
-            $colModel['no_sisda'] = array('No Sisda',110,TRUE,'left',2);
-            $colModel['nama_siswa'] = array('Nama Siswa',200,TRUE,'left',2);
-            $colModel['tempat_lahir'] = array('Tempat',100,TRUE,'left',2);
-            $colModel['tanggal_lahir'] = array('Tanggal Lahir',90,TRUE,'left',2);
+            $colModel['ta_'] = array('Tahun Ajaran',110,TRUE,'left',2);
+            $colModel['jenjang_'] = array('Jenjang',110,TRUE,'left',2);
+            //$colModel['tingkat_'] = array('Tingkat',110,TRUE,'left',2);
+            //$colModel['type_'] = array('Tipe Tagihan',110,TRUE,'left',2);
+            //$colModel['title'] = array('Nama Item',110,TRUE,'left',2);
+            $colModel['nominal_'] = array('Nominal',110,TRUE,'left',2);
             return $colModel;
 	}
 	
@@ -51,7 +53,7 @@ class Master_siswa extends CI_Controller {
             $colModel=$this->listcol(); 
 			
             $gridParams = array(
-                'rp' => 22,
+                'rp' => 25,
                 'rpOptions' => '[10,20,30,40]',
                 'pagestat' => 'Displaying: {from} to {to} of {total} items.',
                 'blockOpacity' => 0.5,
@@ -62,7 +64,7 @@ class Master_siswa extends CI_Controller {
             $buttons[] = array('select','check','btn');
             $buttons[] = array('deselect','uncheck','btn');
             $buttons[] = array('separator');
-            if(izin('c'))$buttons[] = array('daftar siswa baru','add','btn');
+            if(izin('c'))$buttons[] = array('add','add','btn');
             $buttons[] = array('separator');
             if(izin('u'))$buttons[] = array('edit','edit','btn');
             if(izin('d'))$buttons[] = array('delete','delete','btn');
@@ -75,7 +77,10 @@ class Master_siswa extends CI_Controller {
         {
 
             //Build contents query
-            $this->db->select("sv_a.*")->from("$this->utama sv_a");
+            $this->db->select("sv_a.*,sv_b.title ta_,IF(sv_a.jenjang='all', sv_a.jenjang, sv_c.title) as jenjang_,IF(sv_a.tingkat='all', sv_a.tingkat, sv_d.title) as tingkat_,CONCAT('Rp ', FORMAT(sv_a.price, 2)) as nominal_")->from("$this->utama sv_a");
+            $this->db->join("master_tahun_ajaran sv_b","sv_a.ta=sv_b.id","left");
+            $this->db->join("master_jenjang sv_c","sv_a.jenjang=sv_c.id","left");
+            $this->db->join("master_tingkat sv_d","sv_a.tingkat=sv_d.id","left");
             
             $this->flexigrid->build_query();
 		//lastq();
@@ -126,10 +131,10 @@ class Master_siswa extends CI_Controller {
 				$b=2;
 				foreach($colModel as $key=>$cm){
 					if($key=='auth'){
-                                        $record_items[$a][$b]="<a href='".base_url()."master_siswa/auth/$row->id'>Menu</a>";
+                                        $record_items[$a][$b]="<a href='".base_url()."master_tingkat/auth/$row->id'>Menu</a>";
                                         
                                         }elseif($key=='prospek'){
-                                        $record_items[$a][$b]="<a href='".base_url()."master_siswa/prospek/$row->id'>Prospek Ref</a>";
+                                        $record_items[$a][$b]="<a href='".base_url()."master_tingkat/prospek/$row->id'>Prospek Ref</a>";
                                         
                                         }
 					elseif($key=='username'){
@@ -179,15 +184,20 @@ class Master_siswa extends CI_Controller {
 			$filter=array('id'=>'where/'.$id);
 			$data['type']='Edit';
 			$data['list']=GetAll($this->utama,$filter);
+                        $v=$data['list']->row_array();
+                        $data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array('jenjang'=>'where/'.$v['jenjang']));
+                        $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array('tingkat'=>'where/'.$v['tingkat']));
 		}
 		else{
 			
-		permissionz('c');
+                        permissionz('c');
 			$data['type']='New';
+                        $data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array('id'=>'where/abaceafe'));
+                        $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array('id'=>'where/abaceafe'));
 		}
 		//$data['opt']=GetOptAll('menu','-Parents-');
-                $data['opt_leader']=GetOptAll('sv_master_siswa','-Leader-',array(),'nama_lengkap');
-                $data['opt_leader'][0]='-Tidak Ada Leader';
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
                 //array_push($data['opt_leader'],$def);
 		$data['content'] = 'contents/'.$this->utama.'/edit';
                 
@@ -210,7 +220,9 @@ class Master_siswa extends CI_Controller {
 			if(!$data[$r['Field']] && !$data[$r['Field']."_temp"]) unset($data[$r['Field']]);
 			unset($data[$r['Field']."_temp"]);
 		}
-                
+                if(!$this->input->post('jenjang'))$data['jenjang']='all';
+                if(!$this->input->post('tingkat'))$data['tingkat']='all';
+                $data['price']=str_replace(',','.',str_replace('.','',str_replace('Rp ','',$data['price'])));
 		
 		if($id != NULL && $id != '')
 		{
@@ -251,6 +263,51 @@ class Master_siswa extends CI_Controller {
 		redirect($this->utama);
 		
 	}
-	
+        function loadjenjang(){
+            $ids=rand(111,9999);
+            echo form_dropdown('jenjang',GetOptAll('master_jenjang','-All-',array()),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changejenjang(this.value)' id='jenjang$ids'");
+            echo"<script>
+                    $(document).ready(function(e){ 
+                        $('#jenjang$ids').css('width','200px').select2({allowClear:true});
+				$('#select2-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which === 2) $('.select2').addClass('tag-input-style');
+					 else $('.select2').removeClass('tag-input-style');
+				});});
+                    
+                    </script>";
+        }
+	function loadtingkat($jenjang){
+            $ids=rand(111,9999);
+            echo form_dropdown('tingkat',GetOptAll('master_tingkat','-All-',array('jenjang'=>'where/'.$jenjang)),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='gantitingkat(this.value)' id='tingkat$ids'");
+                       echo "<script>
+                            $(document).ready(function(e){ 
+                                    $('#tingkat$ids').css('width','200px').select2({allowClear:true});
+                                        $('#select2-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which === 2) $('.select2').addClass('tag-input-style');
+					 else $('.select2').removeClass('tag-input-style');
+				});});
+                    
+                     
+                              </script>";
+        }
+        function loadkelas($tingkat){
+            $ids=rand(111,9999);
+            echo form_dropdown('kelas',GetOptAll('master_kelas','-All-',array('tingkat'=>'where/'.$tingkat)),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' id='kelas$ids'");
+                       echo "<script>
+                            $(document).ready(function(e){ 
+                                    $('#kelas$ids').css('width','200px').select2({allowClear:true});
+                                        $('#select2-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which === 2) $('.select2').addClass('tag-input-style');
+					 else $('.select2').removeClass('tag-input-style');
+				});
+                            });
+                        </script>";
+        }
 }
 ?>

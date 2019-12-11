@@ -227,7 +227,7 @@ class Load extends CI_Controller {
             foreach($siswa as $ss){
                 $opt_all[$ss['siswa_id']]=GetValue('nama_siswa','master_siswa',array('id'=>'where/'.$ss['siswa_id']));
             }
-            echo form_dropdown('kelas',$opt_all,(isset($val['siswa']) ? $val['siswa'] : ''),"class='select2' id='siswa$ids' onchange='gantisiswa(this.value)'");
+            echo form_dropdown('siswa',$opt_all,(isset($val['siswa']) ? $val['siswa'] : ''),"class='select2' id='siswa$ids' onchange='gantisiswa(this.value)'");
                        echo "<script>
                             $(document).ready(function(e){ 
                                     $('#siswa$ids').css('width','200px').select2({allowClear:true});

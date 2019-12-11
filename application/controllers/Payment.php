@@ -245,6 +245,8 @@ class payment extends CI_Controller {
         $data['kembali']=$this->input->post('kembali');
         $data['metode']=$this->input->post('metode');
         $data['bank']=$this->input->post('bank');
+        $data['siswa_id']=$this->input->post('siswa');
+        $data['ta']=$this->input->post('ta');
         $data['created_on']=date("Y-m-d H:i:s");
         $data['created_by']='sysadmin';
         

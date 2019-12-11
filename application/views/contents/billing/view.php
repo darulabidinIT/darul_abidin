@@ -27,7 +27,10 @@ function btn(com,grid)
     if (com == 'add' ) {
 		window.location = _base_url + controller + 'form/';
     }
-	
+    if (com == 'rekaptagihan' ) {
+       // alert('ok');
+		window.location = _base_url + controller + 'rekap_bulan/';
+    }
     if (com == 'select' )
     {
 		$('.bDiv tbody tr',grid).addClass('trSelected');
@@ -37,14 +40,14 @@ function btn(com,grid)
     {
 		$('.bDiv tbody tr',grid).removeClass('trSelected');
     }
-	if(com=='edit'){
+	if(com=='cetak tagihan'){
 		if($('.trSelected',grid).length==1){ 
     			var abbr = [];
     				$('.hDiv th', flex).each( function(index){
        			 abbr[index] = $(this).attr('abbr');
   				  });
 		//var items = $('.trSelected',grid);
- 		 window.location = _base_url + controller + 'form/' + $('td:nth-child('+ (1+$.inArray('idnya',abbr)) +')>div', '.trSelected',grid).text();
+ 		 window.location = _base_url + controller + 'cetak_tagihan/' + $('td:nth-child('+ (1+$.inArray('idnya',abbr)) +')>div', '.trSelected',grid).text();
 			} else {
 				return false;
 			} 

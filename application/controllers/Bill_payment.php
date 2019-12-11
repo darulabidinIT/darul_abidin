@@ -1,9 +1,9 @@
 <?php 
-class Billing extends CI_Controller {
+class Bill_payment extends CI_Controller {
 		
 		
-		var $utama ='billing';
-		var $title ='Billing';
+		var $utama ='bill_payment';
+		var $title ='Daftar Pembayaran';
 		function __construct(){
 				parent::__construct();
                                 $this->load->library('flexigrid');
@@ -37,10 +37,12 @@ class Billing extends CI_Controller {
 		
             $colModel['idnya'] = array('ID',50,TRUE,'left',2,TRUE);
             $colModel['id'] = array('ID',100,TRUE,'left',2,TRUE);
-            $colModel['title'] = array('Bill',150,TRUE,'left',2);
-            $colModel['siswa_'] = array('Siswa',150,TRUE,'left',2);
+            $colModel['created_on'] = array('Waktu Transaksi',150,TRUE,'left',2);
+            $colModel['ta_'] = array('Tahun Ajaran',150,TRUE,'left',2);
             $colModel['kelas_'] = array('Kelas',150,TRUE,'left',2);
-            $colModel['status'] = array('Status',150,TRUE,'left',2);
+            $colModel['siswa_'] = array('Nama Siswa',150,TRUE,'left',2);
+            $colModel['created_by'] = array('Kasir',150,TRUE,'left',2);
+            $colModel['total'] = array('Nominal',150,TRUE,'left',2);
 			return $colModel;
 	}
         
@@ -57,13 +59,12 @@ class Billing extends CI_Controller {
                 'showTableToggleBtn' => TRUE
 		);
         
-           $buttons[] = array('select','check','btn');
+            $buttons[] = array('select','check','btn');
             $buttons[] = array('deselect','uncheck','btn');
             $buttons[] = array('separator');
-            $buttons[] = array('cetak tagihan','edit','btn');
-            $buttons[] = array('rekaptagihan','edit','btn');
+            $buttons[] = array('cetak invoice','edit','btn');
             //$buttons[] = array('separator');
-             //$buttons[] = array('edit','edit','btn');
+             $buttons[] = array('rekap pemasukan','edit','btn');
             //$buttons[] = array('delete','delete','btn');
             //$buttons[] = array('separator');
 		
@@ -74,19 +75,20 @@ class Billing extends CI_Controller {
         {
 
             //Build contents query
-            $this->db->select("sv_a.*,b.nama_siswa siswa_,d.title kelas_")->from('sv_bill sv_a');
+            $this->db->select("sv_a.*,b.nama_siswa siswa_,d.title kelas_,e.title ta_")->from('sv_bill_payment sv_a');
             $this->db->join('sv_master_siswa b', "sv_a.siswa_id=b.id", 'left');
             $this->db->join('sv_kelas_siswa c', "sv_a.siswa_id=c.siswa_id and sv_a.ta=c.ta", 'left');
             $this->db->join('sv_master_kelas d', "c.kelas = d.id", 'left');
-            $this->db->order_by('c.kelas', "asc");
-            $this->db->order_by('b.nama_siswa', "asc");
+            $this->db->join('sv_master_tahun_ajaran e', "sv_a.ta=e.id", 'left');
+            //$this->db->order_by('c.kelas', "asc");
+            //$this->db->order_by('b.nama_siswa', "asc");
             $this->flexigrid->build_query();
 
             //Get contents
             $return['records'] = $this->db->get();
 
             //Build count query
-            $this->db->select("count(id) as record_count")->from('sv_bill');
+            $this->db->select("count(id) as record_count")->from('sv_bill_payment');
             $this->flexigrid->build_query(FALSE);
             $record_count = $this->db->get();
             $row = $record_count->row();
@@ -365,11 +367,6 @@ class Billing extends CI_Controller {
                             });
                         </script>";
         }
-        function cetak_tagihan($id){
-                $data['datapay']=GetAll('sv_bill',array('id'=>'where/'.$id))->row_array();
-                $data['content'] = 'contents/'.$this->utama.'/tagihan';
-		$this->load->view( 'contents/'.$this->utama.'/tagihan',$data);
-    }
         function generate_billing_bulanan($id,$month=true,$mid=null,$yid=null){
             $q="SELECT * FROM sv_kelas_siswa WHERE id='$id'";
             if($mid==null){
@@ -496,9 +493,10 @@ class Billing extends CI_Controller {
             
         }
         }
-        function rekap_bulan(){
+        
+        function rekap_pemasukan(){
             header("Content-type: application/vnd-ms-excel");
 		header("Content-Disposition: attachment; filename=Rekap-Tagihan-SPP".date('YmdHis').".xls");
-            $this->load->view('contents/billing/rekap');
+            $this->load->view('contents/bill_payment/rekap_pemasukan');
         }
 }

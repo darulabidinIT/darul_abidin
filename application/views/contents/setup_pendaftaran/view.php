@@ -24,7 +24,7 @@ function detail(id) {
 }
 function btn(com,grid)
 {
-    if (com == 'daftar siswa baru' ) {
+    if (com == 'add' ) {
 		window.location = _base_url + controller + 'form/';
     }
 	

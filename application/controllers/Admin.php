@@ -1,10 +1,10 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 /*************************************
-  * Created : May 2015
+  * Created : December 2019
   * Creator : Fauzan Rabbani
   * Email   : jhanojan@gmail.com
-  * Framework ver. : CI ver.2.0
+  * Framework ver. : CI ver.3.1.11
 *************************************/	
 
 class Admin extends CI_Controller {
@@ -51,7 +51,7 @@ class Admin extends CI_Controller {
 			$data['type']='New';
 		}
 			$data['opt']=GetOptAll('admin_grup');
-		$data['opt_marketing']=GetOptAll('master_sales','-Marketing-',array(),'name');
+		
 		$data['content'] = 'contents/'.$this->utama.'/edit';
 		//End Global
 		

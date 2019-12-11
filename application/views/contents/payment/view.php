@@ -9,6 +9,8 @@
                         <?php echo $this->session->flashdata('message') ?>
                         </div>
  <?php }?>
+ 
+     <form method="post" action="<?php echo base_url()?>payment/submit_pay">
  <div class="col-md-5">
      <div class="col-md-12">
                     <div class="form-group">
@@ -67,7 +69,6 @@
      </div>
  </div>
  <div class="col-md-7">
-     <form method="post" action="<?php echo base_url()?>payment/submit_pay">
      <div class="col-md-8 invoice" ><h5>Item</h5></div>
      <div class="col-md-4 invoice" ><h5>Price</h5></div>
      

@@ -24,8 +24,12 @@ function detail(id) {
 }
 function btn(com,grid)
 {
-    if (com == 'daftar siswa baru' ) {
+    if (com == 'add' ) {
 		window.location = _base_url + controller + 'form/';
+    }
+	
+        if (com == 'rekap pemasukan' ) {
+		window.location = _base_url + controller + 'rekap_pemasukan/';
     }
 	
     if (com == 'select' )
@@ -37,14 +41,14 @@ function btn(com,grid)
     {
 		$('.bDiv tbody tr',grid).removeClass('trSelected');
     }
-	if(com=='edit'){
+	if(com=='cetak invoice'){
 		if($('.trSelected',grid).length==1){ 
     			var abbr = [];
     				$('.hDiv th', flex).each( function(index){
        			 abbr[index] = $(this).attr('abbr');
   				  });
 		//var items = $('.trSelected',grid);
- 		 window.location = _base_url + controller + 'form/' + $('td:nth-child('+ (1+$.inArray('idnya',abbr)) +')>div', '.trSelected',grid).text();
+ 		 window.location = _base_url  + 'payment/cetak_kwtiansi/' + $('td:nth-child('+ (1+$.inArray('idnya',abbr)) +')>div', '.trSelected',grid).text();
 			} else {
 				return false;
 			} 

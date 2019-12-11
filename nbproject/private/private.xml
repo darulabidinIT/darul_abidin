@@ -2,6 +2,20 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/index.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/views/contents/billing/tagihan.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/views/contents/payment/kwitansi.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/controllers/Bill_payment.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/views/contents/billing/view.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/views/contents/bill_payment/view.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/views/contents/bill_payment/edit.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/controllers/Master_siswa.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/controllers/Billing.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/views/contents/payment/view.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/controllers/Payment.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/controllers/Admin.php</file>
+            <file>file:/Applications/XAMPP/xamppfiles/htdocs/darul_abidin/application/helpers/jhanojan_helper.php</file>
+        </group>
     </open-files>
 </project-private>
