@@ -22,7 +22,7 @@ $opt_item[$i['id']]=$i['title'];
                                <?php echo form_dropdown($nm_f.'[]',$opt_item,$item_,'class="select2" onchange="gantiitem_'.$id.'()" id="'.$nm_f.'-'.$id.'"');
                 //lastq();?>
 				   </div><div class="col-sm-5">
-                                <?php echo form_input('price[]',GetValue('price','setup_itempay',array('id'=>'where/'.$item_)),'class="hargasatuan" style="background:white!important;border:0px;" id="item-price-'.$id.'" readonly')?>
+                                <?php echo form_input('price[]',uang(GetValue('price','setup_itempay',array('id'=>'where/'.$item_))),'class="hargasatuan" style="background:white!important;border:0px;" id="item-price-'.$id.'" readonly')?>
 			   </div>
 		   </div>
 		   

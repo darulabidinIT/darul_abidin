@@ -1583,7 +1583,7 @@ if (!function_exists('rupiahs')){
 if (!function_exists('uang')){
 	function uang($rp)
 	{
-		if($rp) return number_format($rp,0,",",".").",-";
+		if($rp) return number_format($rp,0,",",".")."";
 		else return 0;
 	}
 }

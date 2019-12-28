@@ -313,7 +313,7 @@ class Kelas_siswa extends CI_Controller {
         }
 	function ambil_item(){
             $v=$this->input->post('v');
-            $resp['price']=GetValue('price','sv_setup_itempay',array('id'=>'where/'.$v));
+            $resp['price']=uang(GetValue('price','sv_setup_itempay',array('id'=>'where/'.$v)));
             //lastq();
             echo json_encode($resp);
         }

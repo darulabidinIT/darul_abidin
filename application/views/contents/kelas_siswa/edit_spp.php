@@ -185,10 +185,13 @@ if(isset($list)){
           var sum = 0;
         $('.hargasatuan').each(function()
         {
-            sum += parseFloat($(this).val());
+            
+            satuan = $(this).val()
+            sum += parseFloat(satuan.replace(/\./g,''));
             
         });
-            
+           
+        sum=formatter.format(sum); 
             semua(sum);
             
             

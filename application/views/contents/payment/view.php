@@ -1,3 +1,6 @@
+<!--link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
+<script src="//code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script-->
+
 <div class="col-md-12" style="margin-bottom:2%;">
     
 <span style="font-size:24px; margin-bottom:20%; margin-top:5%;"><?php echo $this->title;?></span>
@@ -10,10 +13,11 @@
                         </div>
  <?php }?>
  
-     <form method="post" action="<?php echo base_url()?>payment/submit_pay">
+     <form method="post" action="<?php echo base_url()?>payment/submit_pay" 
+    onSubmit="return confirm('Proses Transaksi Ini?');">
  <div class="col-md-5">
      <div class="col-md-12">
-                    <div class="form-group">
+                    <!--div class="form-group">
 			   
 			   <?php $nm_f="ta";?>
 			   <div class="col-sm-3">
@@ -22,7 +26,7 @@
 				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' id='tahun_ajaran'")?>
 			   </div>
 		   </div>
-                    <div class="form-group" style="margin-bottom:20px!important;">
+                    <!--div class="form-group" style="margin-bottom:20px!important;">
 			   
 			   <?php $nm_f="jenjang";?>
 			   <div class="col-sm-3">
@@ -48,7 +52,7 @@
 				   </div><div class="col-sm-9" id="kelasdiv">
 				   <?php echo form_dropdown($nm_f,$opt_kelas,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changetingkat(this.value)'")?>
 			   </div>
-		   </div>
+		   </div--->
      
                    <div class="form-group" style="margin-bottom:20px!important;">
 			   
@@ -56,9 +60,19 @@
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Siswa</label>
 				   </div><div class="col-sm-9" id="siswadiv">
-				   <?php echo form_dropdown($nm_f,$opt_kelas,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changetingkat(this.value)'")?>
+				   <?php echo form_dropdown($nm_f,$opt_siswa,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select3' onchange='gantisiswa(this.value)'")?>
 			   </div>
 		   </div>
+         
+                    <!---div class="form-group">
+			   
+			   <?php $nm_f="siswa";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Siswa</label>
+				   </div><div class="col-sm-9">
+				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='ac' id='tahun_ajaran'")?>
+			   </div>
+		   </div-->
      </div>
      <div clas="col-md-12">
         
@@ -79,10 +93,10 @@
      
      
      <div class="col-md-12">
-         <div class="col-md-3">Bayar</div> <div class="col-md-6"><input required="" type="number" name="bayar" class="form-control" onkeyup="liatkembalian(this.value)"></div>
+         <div class="col-md-3">Bayar</div> <div class="col-md-6"><input required="" id="totalbayar" type="text" name="bayar" class="form-control" onkeyup="liatkembalian(this.value)"></div>
      </div>
      <div class="col-md-12">
-         <div class="col-md-3">Kembali</div> <div class="col-md-6"><input type="number" id="kembalian" name="kembali" class="form-control"></div>
+         <div class="col-md-3">Kembali</div> <div class="col-md-6"><input type="text" id="kembalian" name="kembali" class="form-control currency" readonly></div>
      </div>
      <div class="col-md-12">
          <div class="col-md-3">Metode</div><div class="col-md-6"> <?php echo form_dropdown('metode',array('cash'=>'Tunai','transfer'=>'Transfer'),'',"onchange='gantimetode(this.value)'")?></div>
@@ -139,7 +153,7 @@ function del(id) {
                     
                     function carikelas(){
                         $('#loadview').empty();
-                        $('#loadview').append("<img src='<?php echo base_url()?>assets/img/load.gif'></img>");
+                        $('#loadview').append("<img src='<?php echo base_url()?>assets/img/load.gif' width='15px'></img>");
                         var ta=$('#tahun_ajaran').val();
                         var jenjang=$('#jenjang').val();
                         var tingkat=$('#tingkat').val();
@@ -151,9 +165,11 @@ function del(id) {
           var sum = 0;
         $('.hargasatuan').each(function()
         {
-            sum += parseFloat($(this).val());
+            satuan = $(this).val()
+            sum += parseFloat(satuan.replace(/\./g,''));
             
         });
+        sum=formatter.format(sum);
             //alert(sum);
             semua(sum);
             
@@ -172,10 +188,34 @@ function del(id) {
             }
         }
         function liatkembalian(v){
+            var v = v.replace(/\./g,'')
+            //alert(v);
             var tot=$('#total').val();
+            
+            var tot = tot.replace(/\./g,'')
             var kembali=v-tot;
-            $('#kembalian').val(kembali);
+            var kembalian=formatter.format(kembali);
+            $('#kembalian').val(kembalian);
         }
+       
+        
+                            function gantisiswa(vs){
+                                $('.inv_item').empty();
+                                
+                                hitungtotal();
+                                $('#billdiv').load('<?php echo base_url()?>payment/loadbill/'+vs+'/',{},function(e){
+                         
+                                });
+                            }
+        $(document).ready(function(e){
+            $('.select3').css('width','400px').select2({});
+        })
+</script>
+
+<script>
+  $(function() {
+    $('#totalbayar').maskMoney({thousands:".",decimal:",",precision:0});
+  })
 </script>
 <!--div class="col-md-12"
 <div class="layout-grid">

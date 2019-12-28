@@ -436,7 +436,7 @@
 </script>
 <script>
   $(function() {
-    $('.currency').maskMoney({thousands:",",decimal:".",precision:2});
+    $('.currency').maskMoney({thousands:".",decimal:",",precision:0});
   });
   
   // Jquery Dependency
@@ -525,6 +525,27 @@ function formatCurrency(input, blur) {
   var updated_len = input_val.length;
   caret_pos = updated_len - original_len + caret_pos;
   input[0].setSelectionRange(caret_pos, caret_pos);
+}
+const formatter = new Intl.NumberFormat('id', {
+  style: 'decimal',
+  //currency: 'IDR',
+  minimumFractionDigits: 0
+})
+
+function CurrencyFormatted(amount)
+{
+    var i = parseFloat(amount);
+    if(isNaN(i)) { i = 0; }
+    var minus = '';
+    if(i < 0) { minus = '-'; }
+    i = Math.abs(i);
+    i = parseInt((i + .005) * 100);
+    i = i / 100;
+    s = new String(i);
+    if(s.indexOf('.') < 0) { s += ''; }
+    if(s.indexOf('.') == (s.length - 2)) { s += '0'; }
+    s = minus + s;
+    return s;
 }
 </script>
 		<!-- the following scripts are used in demo only for onpage help and you don't need them -->

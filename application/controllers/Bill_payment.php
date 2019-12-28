@@ -5,9 +5,11 @@ class Bill_payment extends CI_Controller {
 		var $utama ='bill_payment';
 		var $title ='Daftar Pembayaran';
 		function __construct(){
-				parent::__construct();
-                                $this->load->library('flexigrid');
-                                $this->load->helper('flexigrid');
+                parent::__construct();
+                                
+                permissionBiasa();
+                $this->load->library('flexigrid');
+                $this->load->helper('flexigrid');
 		}
                 
                 
