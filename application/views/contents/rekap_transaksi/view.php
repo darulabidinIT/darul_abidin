@@ -44,7 +44,7 @@
             </div>
             
         </div>
-            <button type="submit" class="btn btn-info">Search</button>
+            <button type="button" onclick="caridata()" class="btn btn-info">Search</button>
         </form>
     </fieldset>
 </div>
@@ -136,14 +136,21 @@ function btn(com,grid)
       }           
 }
 setInterval("$('#flex1').flexReload()",50000 );
-function changejenjang(val){
+                    function changejenjang(val){
                      $('#tingkatdiv').load('<?php echo base_url()?>load/loadtingkat/'+val,{},function(e){
                          
                         });
                     }
+                    function caridata(){
+                        $('#tabledata').append("<img src='<?php echo base_url()?>assets/img/load.gif' width='5px'></img>");
+                        $('#tabledata').load('<?php echo base_url()?>rekap_transaksi/load/',{},function(e){
+                                
+                        });
+                        
+                    }
 </script>
 <div class="col-md-12">
-    <div id="tabledata">
+    <div id="tabledata" class="col-md-12">
         
     </div>
     <!--div class="layout-grid">

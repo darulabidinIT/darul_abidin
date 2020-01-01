@@ -253,9 +253,9 @@ class payment extends CI_Controller {
         //print_mz($this->input->post());
         $bill=$this->input->post('id_bill');
         $data['no_payment']=strtotime(date('Y-m-d')).rand(111,999);
-        $data['total']=$this->input->post('total');
-        $data['bayar']=$this->input->post('bayar');
-        $data['kembali']=$this->input->post('kembali');
+        $data['total']=str_replace('.','',$this->input->post('total'));
+        $data['bayar']=str_replace('.','',$this->input->post('bayar'));
+        $data['kembali']=str_replace('.','',$this->input->post('kembali'));
         $data['metode']=$this->input->post('metode');
         $data['bank']=$this->input->post('bank');
         $data['siswa_id']=$this->input->post('siswa');

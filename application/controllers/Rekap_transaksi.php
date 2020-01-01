@@ -515,4 +515,7 @@ class Rekap_transaksi extends CI_Controller {
 		header("Content-Disposition: attachment; filename=Rekap-Tagihan-SPP".date('YmdHis').".xls");
             $this->load->view('contents/billing/rekap');
         }
+        function load(){
+            $this->load->view('contents/'.$this->utama.'/tabledata.php');
+        }
 }

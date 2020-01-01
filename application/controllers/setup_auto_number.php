@@ -9,14 +9,15 @@
 
 class Setup_auto_number extends CI_Controller {
 	
-		var $utama ='Setup_auto_number';
+		var $utama ='setup_auto_number';
 		var $title ='Auto Number';
+                
 	function __construct()
 	{
 		parent::__construct();permissionBiasa();
 		$this->load->library('flexigrid');
-        $this->load->helper('flexigrid');
-error_reporting(0);
+                $this->load->helper('flexigrid');
+                error_reporting(0);
 	}
 	
 	function index()

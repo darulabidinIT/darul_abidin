@@ -77,7 +77,7 @@ class Setup_daftar_ulang extends CI_Controller {
         {
 
             //Build contents query
-            $this->db->select("sv_a.*,sv_b.title ta_,IF(sv_a.jenjang='all', sv_a.jenjang, sv_c.title) as jenjang_,IF(sv_a.tingkat='all', sv_a.tingkat, sv_d.title) as tingkat_,CONCAT('Rp ', FORMAT(sv_a.price, 2)) as nominal_")->from("$this->utama sv_a");
+            $this->db->select("sv_a.*,sv_b.title ta_,IF(sv_a.jenjang='all', sv_a.jenjang, sv_c.title) as jenjang_,IF(sv_a.tingkat='all', sv_a.tingkat, sv_d.title) as tingkat_,CONCAT('Rp ', FORMAT(sv_a.price, 0)) as nominal_")->from("$this->utama sv_a");
             $this->db->join("master_tahun_ajaran sv_b","sv_a.ta=sv_b.id","left");
             $this->db->join("master_jenjang sv_c","sv_a.jenjang=sv_c.id","left");
             $this->db->join("master_tingkat sv_d","sv_a.tingkat=sv_d.id","left");

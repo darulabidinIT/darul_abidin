@@ -2338,6 +2338,9 @@ function stok_trx($param, $param_id, $brand, $jenis,$produk, $part, $jum,  $satu
 }
 function post($g){
      $CI=&get_instance();
-    return $CI->input->post($g);
+     return $CI->input->post($g);
+}
+function uangtostr($p){
+    return str_replace('.','',$p);
 }
 ?>
