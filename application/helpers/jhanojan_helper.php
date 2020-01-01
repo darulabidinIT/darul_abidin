@@ -2333,6 +2333,11 @@ function stok_trx($param, $param_id, $brand, $jenis,$produk, $part, $jum,  $satu
     if($cmd=='del'){
         $CI->db->delete('sv_stok_trx',array('param'=>$param,'param_id'=>$param_id));
     }
+    
     //lastq();
+}
+function post($g){
+     $CI=&get_instance();
+    return $CI->input->post($g);
 }
 ?>

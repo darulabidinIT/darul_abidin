@@ -202,6 +202,10 @@ function del(id) {
                             function gantisiswa(vs){
                                 $('.inv_item').empty();
                                 
+                                
+                                $('#billdiv').empty();
+                                
+                                $('#billdiv').append("<img src='<?php echo base_url()?>assets/img/load.gif' width='5px'></img>");
                                 hitungtotal();
                                 $('#billdiv').load('<?php echo base_url()?>payment/loadbill/'+vs+'/',{},function(e){
                          

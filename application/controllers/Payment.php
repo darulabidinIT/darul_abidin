@@ -232,8 +232,14 @@ class payment extends CI_Controller {
 		
 	}
     function loadbill($siswa){
-        $data['qbill']=$this->db->query("SELECT * FROM sv_bill WHERE siswa_id='$siswa' AND status='unpaid' ORDER BY id ASC ")->result_array();
-        $this->load->view('contents/payment/bill_list',$data);
+        $billing=$this->db->query("SELECT * FROM sv_bill WHERE siswa_id='$siswa' AND status='unpaid' ORDER BY id ASC ");
+        $data['qbill']=$billing->result_array();
+        if($billing->num_rows()>0){
+            $this->load->view('contents/payment/bill_list',$data);
+        }else
+        {
+         echo "Siswa Tidak Memiliki Tagihan";   
+        }
     }
     function item_bill($s){
         

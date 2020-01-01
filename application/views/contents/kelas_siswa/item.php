@@ -1,4 +1,4 @@
-<?php
+    <?php
 $opt_item['']='-Item-';
 $lengkap=$this->db->query("SELECT a.*,b.tingkat tingkat,c.jenjang jenjang FROM sv_kelas_siswa a left join sv_master_kelas b on a.kelas=b.id left join sv_master_tingkat c on b.tingkat=c.id WHERE a.id='".$id_data."'")->row_array();
 //lastq();
