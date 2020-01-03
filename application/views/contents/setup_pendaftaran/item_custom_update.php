@@ -22,7 +22,7 @@ $opt_item[$i['id']]=$i['title'];
                                <?php echo form_dropdown($nm_f,$opt_item,$item_,'class="select2 form-control" onchange="" id="item-custom-'.$id.'"');
                 //lastq();?>
 				   </div><div class="col-sm-5">
-                                <?php echo form_input('custom['.$id.'][price]',$item_price,'class="hargasatuan currency" id="item-price-'.$id.'" onchange="hitungtotal()"')?>
+                                <?php echo form_input('custom['.$id.'][price]',uang($item_price),'class="hargasatuan currency" id="item-price-'.$id.'" onchange="hitungtotal()"')?>
 			   </div>
 		   </div>
 		   

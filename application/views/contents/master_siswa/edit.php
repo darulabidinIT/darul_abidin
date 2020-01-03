@@ -138,6 +138,34 @@ if(isset($list)){
 				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-2">
 			   </div>
 		   </div>
+		   <div class="form-group">
+			   
+			   <?php $nm_f="periode";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
+				   </div><div class="col-sm-9">
+				   
+				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ambilta()),"class='select2'")?>
+			   </div>
+		   </div>
+		   <div class="form-group">
+			   
+			   <?php $nm_f="jenjang";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Jenjang</label>
+				   </div><div class="col-sm-9">
+				    <?php echo form_dropdown($nm_f,$opt_jenjang,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changejenjang(this.value)'")?>
+			   </div>
+		   </div>
+		   <div class="form-group">
+			   
+			   <?php $nm_f="biaya_masuk";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Biaya Masuk</label>
+				   </div><div class="col-sm-9" id="divspp">
+				   
+			   </div>
+		   </div>
                    </fieldset>
            <fieldset class="col-md-6">
                     <div class="form-group">
@@ -263,4 +291,10 @@ if(isset($list)){
 <script>
 	$('#target').mask('9.99');
 	$('#comission').mask('9.99');
+        
+                    function changejenjang(val){
+                     $('#divspp').load('<?php echo base_url()?>master_siswa/load_spp/'+val,{},function(e){
+                         
+                        });
+                    }
 </script>

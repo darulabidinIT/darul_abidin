@@ -230,7 +230,13 @@ class Setup_pendaftaran extends CI_Controller {
                     $item['item']=array();
                 }
                 if($this->input->post('custom')){
-                    $item['custom']=$this->input->post('custom');
+                    $cs=$this->input->post('custom');
+                    $a=1;
+                    foreach($cs as $ct ){
+                        $custom[$a]['item']=$ct['item'];
+                        $custom[$a]['price']=str_replace('.','',$ct['price']);
+                    }
+                    $item['custom']=$custom;
                 
                 }
                 else{

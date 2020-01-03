@@ -188,6 +188,8 @@ class Master_siswa extends CI_Controller {
 		//$data['opt']=GetOptAll('menu','-Parents-');
                 $data['opt_leader']=GetOptAll('sv_master_siswa','-Leader-',array(),'nama_lengkap');
                 $data['opt_leader'][0]='-Tidak Ada Leader';
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-Jenjang-',array());
                 //array_push($data['opt_leader'],$def);
 		$data['content'] = 'contents/'.$this->utama.'/edit';
                 
@@ -255,7 +257,62 @@ class Master_siswa extends CI_Controller {
 		
 		redirect($this->utama);
 		
-	}
+	} 
+        function load_spp($tingkat,$ids=null){
+            
+            if($ids!=null)$ids=rand(111,9999);
+            
+$opt_item['']='-Item-';
+//$lengkap=$this->db->query("SELECT * FROM sv_setup_monthly WHERE a.id='".$id_data."'")->row_array();
+//lastq();
+$q="SELECT * FROM sv_setup_pendaftaran WHERE jenjang='$tingkat'";
+$item=$this->db->query($q)->result_array();
+//lastq();
+foreach($item as $i){
+    
+$opt_item[$i['id']]=$i['title'];
+    
+}
+            echo form_dropdown('item_spp',$opt_item,(isset($val['kelas']) ? $val['kelas'] : ''),"class='select2' onchange='changespp(this.value)' id='spp$ids'");
+            echo "<div id='sppitem'></div>";
+                       echo "<script>
+                            $(document).ready(function(e){ 
+                                    $('#spp$ids').css('width','200px').select2({allowClear:true});
+                                        $('#select2-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which === 2) $('.select2').addClass('tag-input-style');
+					 else $('.select2').removeClass('tag-input-style');
+				});
+                            });
+                            function changespp(val){
+                                $('#sppitem').load('".base_url()."master_siswa/item_spp/'+val);
+                            }
+                        </script>";
+        }
+        function item_spp($v){
+            $g=GetAll('sv_setup_pendaftaran',array('id'=>'where/'.$v))->row_array();
+            echo form_hidden('item_spp',$g['item']);
+            $item=json_decode($g['item']);
+            $total=0;
+            foreach($item->item as $it){
+                $harga=GetValue('price','setup_itempay',array('id'=>'where/'.$it));
+                echo "<br>";
+                echo GetValue('title','setup_itempay',array('id'=>'where/'.$it)).'  <b>('.uang($harga).')</b>';
+                echo "<br>";
+                $total+=$harga;
+            }
+            
+            foreach($item->custom as $it){
+                $harga=$it->price;
+                echo "<br>";
+                echo GetValue('title','ref_item_custom',array('id'=>'where/'.$it->item)).'  <b>('.uang($harga).')</b>';
+                echo "<br>";
+                $total+=$harga;
+            }
+            echo "<hr>";
+            echo "TOTAL : ".uang($total);
+        }
 	
 }
 ?>
