@@ -38,7 +38,7 @@ if(isset($list)){
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'")?>
+				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ambilta()),"class='select2'")?>
 			   </div>
 		   </div>
 		   

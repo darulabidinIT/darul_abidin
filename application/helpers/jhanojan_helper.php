@@ -2343,4 +2343,11 @@ function post($g){
 function uangtostr($p){
     return str_replace('.','',$p);
 }
+function ambilta($date=null){
+    $CI=&get_instance();
+    if($date==NULL){
+    $date=date('Y-m-d');}
+    $q=$CI->db->query("SELECT id FROM sv_master_tahun_ajaran WHERE '$date' BETWEEN start AND end")->row_array();
+    return $q['id'];
+}
 ?>

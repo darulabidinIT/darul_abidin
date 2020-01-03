@@ -38,7 +38,7 @@ if(isset($list)){
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'")?>
+				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ambilta()),"class='select2'")?>
 			   </div>
 		   </div>
 		   
@@ -64,7 +64,7 @@ if(isset($list)){
 			   
 			   <?php $nm_f="type";?>
 			   <div class="col-sm-3">
-				   <label for="<?php echo $nm_f?>">Tipe Tagihan</label>
+				   <label for="<?php echo $nm_f?>">Tipe Item</label>
 				   </div><div class="col-sm-9">
 				   <?php echo form_dropdown($nm_f,GetOptAll('sv_ref_item_custom','-Tipe Tagihan-'),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'")?>
 			   </div>
@@ -84,7 +84,7 @@ if(isset($list)){
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Nominal</label>
 				   </div><div class="col-sm-9" id="kelasdiv">
-				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? str_replace('.',',',$val[$nm_f]) : ''),"class='' data-type='currency' pattern='^\Rp \d{1,3}(.\d{3})*(\,\d+)?$' ")?>
+				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? str_replace('.',',',$val[$nm_f]) : ''),"class='currency' pattern='^\Rp \d{1,3}(.\d{3})*(\,\d+)?$' ")?>
 			   </div>
 		   </div>
            

@@ -248,4 +248,51 @@ class Load extends CI_Controller {
                             }
                         </script>";
         }
+        function loadspp($tingkat,$ids=null){
+            
+            if($ids!=null)$ids=rand(111,9999);
+            
+$opt_item['']='-Item-';
+//$lengkap=$this->db->query("SELECT * FROM sv_setup_monthly WHERE a.id='".$id_data."'")->row_array();
+//lastq();
+$q="SELECT * FROM sv_setup_monthly WHERE tingkat='".GetValue('tingkat','master_kelas',array('id'=>'where/'.$tingkat))."'";
+$item=$this->db->query($q)->result_array();
+//lastq();
+foreach($item as $i){
+    
+$opt_item[$i['id']]=$i['title'];
+    
+}
+            echo form_dropdown('item_spp',$opt_item,(isset($val['kelas']) ? $val['kelas'] : ''),"class='select2' onchange='changespp(this.value)' id='spp$ids'");
+            echo "<div id='sppitem'></div>";
+                       echo "<script>
+                            $(document).ready(function(e){ 
+                                    $('#spp$ids').css('width','200px').select2({allowClear:true});
+                                        $('#select2-multiple-style .btn').on('click', function(e){
+					var target = $(this).find('input[type=radio]');
+					var which = parseInt(target.val());
+					if(which === 2) $('.select2').addClass('tag-input-style');
+					 else $('.select2').removeClass('tag-input-style');
+				});
+                            });
+                            function changespp(val){
+                                $('#sppitem').load('".base_url()."load/item_spp/'+val);
+                            }
+                        </script>";
+        }
+        function item_spp($v){
+            $g=GetAll('sv_setup_monthly',array('id'=>'where/'.$v))->row_array();
+            echo form_hidden('item_spp',$g['item']);
+            $item=json_decode($g['item']);
+            $total=0;
+            foreach($item->item as $it){
+                $harga=GetValue('price','setup_itempay',array('id'=>'where/'.$it));
+                echo "<br>";
+                echo GetValue('title','setup_itempay',array('id'=>'where/'.$it)).'  <b>('.uang($harga).')</b>';
+                echo "<br>";
+                $total+=$harga;
+            }
+            echo "<hr>";
+            echo "TOTAL : ".uang($total);
+        }
 }

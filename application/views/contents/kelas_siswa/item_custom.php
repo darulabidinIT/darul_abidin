@@ -22,7 +22,7 @@ $opt_item[$i['id']]=$i['title'];
                                <?php echo form_dropdown($nm_f,$opt_item,(isset($val[$nm_f]) ? $val[$nm_f] : ''),'class="select2 form-control" onchange="" id="item-custom-'.$id.'"');
                 //lastq();?>
 				   </div><div class="col-sm-5">
-                                <?php echo form_input('custom['.$id.'][price]','','class="hargasatuan" id="item-price-'.$id.'" onchange="hitungtotal()"')?>
+                                <?php echo form_input('custom['.$id.'][price]','','class="hargasatuan currency" id="item-price-'.$id.'" onchange="hitungtotal()"')?>
 			   </div>
 		   </div>
 		   
@@ -35,6 +35,8 @@ $opt_item[$i['id']]=$i['title'];
                            $('.date-picker').datepicker({
                                format:'yyyy-mm-dd'
                            });
+                           
+                            $('.currency').maskMoney({thousands:".",decimal:",",precision:0});
                  });
        
               </script> 

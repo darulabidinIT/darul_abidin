@@ -7,10 +7,10 @@
   * Framework ver. : CI ver.3.1.11
 *************************************/	
 
-class Setup_pendaftaran extends CI_Controller {
+class Setup_monthly extends CI_Controller {
 	
-		var $utama ='setup_pendaftaran';
-		var $title ='Setup Harga Pendaftaran';
+		var $utama ='setup_monthly';
+		var $title ='Setup SPP';
 	function __construct()
 	{
 		parent::__construct();permissionz();
@@ -42,8 +42,8 @@ class Setup_pendaftaran extends CI_Controller {
             $colModel['id'] = array('ID',100,TRUE,'left',2,TRUE);
             $colModel['ta_'] = array('Tahun Ajaran',110,TRUE,'left',2);
             $colModel['jenjang_'] = array('Jenjang',110,TRUE,'left',2);
+            $colModel['tingkat_'] = array('Tingkat',110,TRUE,'left',2);
             $colModel['title'] = array('Nama Bill',110,TRUE,'left',2);
-            //$colModel['tingkat_'] = array('Tingkat',110,TRUE,'left',2);
             //$colModel['type_'] = array('Tipe Tagihan',110,TRUE,'left',2);
             //$colModel['title'] = array('Nama Item',110,TRUE,'left',2);
             $colModel['nominal_'] = array('Nominal',110,TRUE,'left',2);
@@ -295,7 +295,7 @@ class Setup_pendaftaran extends CI_Controller {
         }
 	function loadtingkat($jenjang){
             $ids=rand(111,9999);
-            echo form_dropdown('tingkat',GetOptAll('master_tingkat','-All-',array('jenjang'=>'where/'.$jenjang)),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='gantitingkat(this.value)' id='tingkat$ids'");
+            echo form_dropdown('tingkat',GetOptAll('master_tingkat','-All-',array('jenjang'=>'where/'.$jenjang)),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' id='tingkat$ids'");
                        echo "<script>
                             $(document).ready(function(e){ 
                                     $('#tingkat$ids').css('width','200px').select2({allowClear:true});
@@ -327,7 +327,7 @@ class Setup_pendaftaran extends CI_Controller {
         function item($id){
             $data['id']=$id;
             $data['id_data']=$this->input->post('id');
-            $this->load->view('contents/setup_pendaftaran/item',$data);
+            $this->load->view('contents/setup_monthly/item',$data);
         }
 	function ambil_item(){
             $v=$this->input->post('v');
@@ -339,7 +339,7 @@ class Setup_pendaftaran extends CI_Controller {
         function item_custom($id){
             $data['id']=$id;
             $data['id_data']=$this->input->post('id');
-            $this->load->view('contents/setup_pendaftaran/item_custom',$data);
+            $this->load->view('contents/setup_monthly/item_custom',$data);
         }
 }
 ?>

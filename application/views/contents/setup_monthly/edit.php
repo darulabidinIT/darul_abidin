@@ -48,10 +48,19 @@ if(isset($list)){
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Jenjang</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_jenjang,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'  id='jenjang'")?>
+				   <?php echo form_dropdown($nm_f,$opt_jenjang,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'  id='jenjang' onchange='changejenjang(this.value)'")?>
 			   </div>
 		   </div>
-           
+                   
+		   <div class="form-group">
+			   
+			   <?php $nm_f="tingkat";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Tingkat</label>
+				   </div><div class="col-sm-9" id="tingkatdiv">
+				   <?php echo form_dropdown($nm_f,$opt_tingkat,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'  id='tingkat'")?>
+			   </div>
+		   </div>
 		   <div class="form-group">
 			   
 			   <?php $nm_f="title";?>
@@ -135,13 +144,8 @@ if(isset($list)){
     });
 	$('#target').mask('9.99');
 	$('#comission').mask('9.99');
-                    function changetingkat(val){
-                     $('#kelasdiv').load('<?php echo base_url()?>setup_itempay/loadkelas/'+val,{},function(e){
-                         
-                        });
-                    }
                     function changejenjang(val){
-                     $('#tingkatdiv').load('<?php echo base_url()?>setup_itempay/loadtingkat/'+val,{},function(e){
+                     $('#tingkatdiv').load('<?php echo base_url()?>setup_monthly/loadtingkat/'+val,{},function(e){
                          
                         });
                     }
@@ -207,4 +211,5 @@ if(isset($list)){
         function semua(sum){
             $('#total').val(sum);
         }
+        
 </script>

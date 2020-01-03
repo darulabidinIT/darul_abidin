@@ -25,7 +25,7 @@ if(isset($list)){
         
     </div>
     	<div class="box-content">
-       <form id="form" method="post" enctype="multipart/form-data" action="<?php echo base_url($this->utama)?>/submit" class="form-horizontal formular" role="form">
+       <form id="form" method="post" enctype="multipart/form-data" action="<?php echo base_url($this->utama)?>/spp_submit" class="form-horizontal formular" role="form">
 		   
 		   <?php echo form_hidden('id',isset($val['id']) ? $val['id'] : '')?>
 				
@@ -34,43 +34,42 @@ if(isset($list)){
 			
 		    <div class="form-group">
 			   
-			   <?php $nm_f="ta";?>
+			   <?php $nm_f="ta_";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ambilta()),"class='select2' id='tahun_ajaran'")?>
+				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val['ta']) ? $val['ta'] : ''),"class='select2' disabled")?>
 			   </div>
 		   </div>
 		   
-		   <div class="form-group">
+		  
+                   <div class="form-group">
 			   
-			   <?php $nm_f="jenjang";?>
+			   <?php $nm_f="kelas_";?>
 			   <div class="col-sm-3">
-				   <label for="<?php echo $nm_f?>">Jenjang</label>
+				   <label for="<?php echo $nm_f?>">Kelas</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_jenjang,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2'  id='jenjang'")?>
+				  <?php echo form_dropdown($nm_f,$opt_kelas,(isset($val['kelas']) ? $val['kelas'] : ''),"class='select2' onchange='changetingkat(this.value)' disabled")?>
 			   </div>
 		   </div>
-           
-		   <div class="form-group">
+                   <div class="form-group">
 			   
-			   <?php $nm_f="title";?>
+			   <?php $nm_f="nama_";?>
 			   <div class="col-sm-3">
-				   <label for="<?php echo $nm_f?>">Judul</label>
-				   </div><div class="col-sm-9">
-				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class=''  id='title'")?>
+				   <label for="<?php echo $nm_f?>">Nama</label>
+				   </div><div class="col-sm-4">
+				   <?php echo form_input($nm_f,(isset($val['id']) ? GetValue('nama_siswa','master_siswa',array('id'=>'where/'.$val['siswa_id'])) : ''),"class='form-control' readonly")?>
 			   </div>
 		   </div>
-                   
-           <div class="form-group">
+               <div class="form-group">
                    <hr>
-                   <h3>Item Pembayaran</h3>
+                   <h3>Item SPP</h3>
                    
                    
                </div>
            <div class="form-group col-md-12" id="area-item">
                    <?php
-                   $itemspp=json_decode($val['item']);
+                   $itemspp=json_decode($val['item_spp']);
                    //print_r($itemspp);
                    ?>
                <?php if(isset($itemspp->item)){?>
@@ -81,7 +80,7 @@ if(isset($list)){
                     $data['id_data']=$val['id'];
                     $data['id']=$ct;
                     ?>
-               <div class="area-item form-group" id="area-item-<?php echo $ct?>" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><?php $this->load->view('contents/setup_pendaftaran/item_update',$data);?></div>
+               <div class="area-item form-group" id="area-item-<?php echo $ct?>" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><?php $this->load->view('contents/kelas_siswa/item_update',$data);?></div>
                     
                 <?php $ct++; }?>
                <?php }?>
@@ -101,7 +100,7 @@ if(isset($list)){
                     ?>
                <div class="area-item-custom form-group" id="area-item-custom-<?php echo $ct?>" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;">
                <?php 
-                    $this->load->view('contents/setup_pendaftaran/item_custom_update',$data);?>
+                    $this->load->view('contents/kelas_siswa/item_custom_update',$data);?>
                </div>
                     
                 <?php $ct++; }?>
@@ -119,7 +118,6 @@ if(isset($list)){
                <?php echo form_input('totalprice','','class="" style="background:white!important;border:0px;" readonly id="total"')?>
                
            </div>
-               
     		<div class="form-group">
             <button type="submit" class="btn pull-right">Submit</button>
             
@@ -135,6 +133,14 @@ if(isset($list)){
     });
 	$('#target').mask('9.99');
 	$('#comission').mask('9.99');
+        function deletebaru(id){
+                    $('#area-item-'+id).remove();
+                    hitungtotal();
+        }
+                 function deletebaru_custom(id){
+                    $('#area-item-custom-'+id).remove();
+                    hitungtotal();
+                }
                     function changetingkat(val){
                      $('#kelasdiv').load('<?php echo base_url()?>setup_itempay/loadkelas/'+val,{},function(e){
                          
@@ -145,20 +151,8 @@ if(isset($list)){
                          
                         });
                     }
-                    
-                    function deletebaru(id){
-                    $('#area-item-'+id).remove();
-                    hitungtotal();
-        }
-                 function deletebaru_custom(id){
-                    $('#area-item-custom-'+id).remove();
-                    hitungtotal();
-                }
-                    
        function tambahitem(){
         var itungproduk=$('.area-item').length;
-        var ta=$('#tahun_ajaran').val();
-        var jenjang=$('#jenjang').val();
         var idsekarang=itungproduk+1;
         if(itungproduk==0){ 
             var oi ='';
@@ -167,15 +161,13 @@ if(isset($list)){
         }
             $('#area-item').append('<div class="area-item form-group" id="area-item-'+idsekarang+'" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><img src="<?php echo base_url().'assets/img/load.gif'?>" width="100px"></div>');
             $('#tomboltambah').hide();
-            setTimeout(function(){ $('#area-item-'+idsekarang).load('<?php echo base_url()?>setup_pendaftaran/item/'+idsekarang,{t:ta,j:jenjang},function(e){
+            setTimeout(function(){ $('#area-item-'+idsekarang).load('<?php echo base_url()?>kelas_siswa/item/'+idsekarang,{id:<?php echo $val['id']?>},function(e){
                     $('#tomboltambah').show();
             }); }, 200);        
         }
         
         function tambahitemcustom(){
         var itungcustom=$('.area-item-custom').length;
-        var ta=$('#tahun_ajaran').val();
-        var jenjang=$('#jenjang').val();
         var customsekarang=itungcustom+1;
         if(itungcustom==0){ 
             var oi ='';
@@ -184,7 +176,7 @@ if(isset($list)){
         }
             $('#area-item-custom').append('<div class="area-item-custom form-group" id="area-item-custom-'+customsekarang+'" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><img src="<?php echo base_url().'assets/img/load.gif'?>" width="100px"></div>');
             $('#tomboltambahcustom').hide();
-            setTimeout(function(){ $('#area-item-custom-'+customsekarang).load('<?php echo base_url()?>setup_pendaftaran/item_custom/'+customsekarang,{t:ta,j:jenjang},function(e){
+            setTimeout(function(){ $('#area-item-custom-'+customsekarang).load('<?php echo base_url()?>kelas_siswa/item_custom/'+customsekarang,{id:<?php echo $val['id']?>},function(e){
                     $('#tomboltambahcustom').show();
             }); }, 200);        
         }
@@ -207,4 +199,5 @@ if(isset($list)){
         function semua(sum){
             $('#total').val(sum);
         }
+        
 </script>

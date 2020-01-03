@@ -43,7 +43,7 @@ class Setup_itempay extends CI_Controller {
             $colModel['ta_'] = array('Tahun Ajaran',110,TRUE,'left',2);
             $colModel['jenjang_'] = array('Jenjang',110,TRUE,'left',2);
             $colModel['tingkat_'] = array('Tingkat',110,TRUE,'left',2);
-            $colModel['type_'] = array('Tipe Tagihan',110,TRUE,'left',2);
+            $colModel['type_'] = array('Tipe Item',110,TRUE,'left',2);
             $colModel['title'] = array('Nama Item',110,TRUE,'left',2);
             $colModel['nominal_'] = array('Nominal',110,TRUE,'left',2);
             return $colModel;

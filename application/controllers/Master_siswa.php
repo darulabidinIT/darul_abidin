@@ -211,6 +211,7 @@ class Master_siswa extends CI_Controller {
 			unset($data[$r['Field']."_temp"]);
 		}
                 
+                
 		
 		if($id != NULL && $id != '')
 		{
@@ -234,6 +235,10 @@ class Master_siswa extends CI_Controller {
 			
 			
 			if(izin('c')){
+                        $date=date('Y');
+                        $digit=1000000+GetValue('val','sv_counter',array('id'=>'where/1'))+1;
+                        $data['no_sisda']=$date.substr($digit,1);
+                        $this->db->query("UPDATE sv_counter SET val=val+1 WHERE id=1");
 			$data['created_by'] = $webmaster_id;
 			$data['created_on'] = date("Y-m-d H:i:s");
 			$this->db->insert('sv_'.$this->utama, $data);
