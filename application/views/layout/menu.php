@@ -107,16 +107,17 @@
 		<ul class="nav nav-list">
 			<?php
 			$webmaster_grup=$this->session->userdata('webmaster_grup');
-			$webmasterid=$this->session->userdata('webmaster_marketing');
 			$q=GetAll('menu',array('id_parents'=>'where/0','sort'=>'order/ASC','is_active'=>'where/Active'));
-						//lastq();
 			if($q->num_rows()>0){
 				foreach($q->result() as $hasil){
 					if($webmaster_grup=='2706'){$allow=1;}else{
 
 						if($this->session->userdata("webmaster_id")=='38'){								
-							$allow=GetValue('view','users_permission',array('menu_id'=>'where/'.$hasil->id,'user_group'=>'where/'.$webmaster_grup));}else{
-								$allow=GetValue('view','users_permission_sf',array('menu_id'=>'where/'.$hasil->id,'user_id'=>'where/'.$webmasterid));}								}
+							$allow=GetValue('view','users_permission',array('menu_id'=>'where/'.$hasil->id,'user_group'=>'where/'.$webmaster_grup));
+                                                        
+                                                }else{
+								$allow=GetValue('view','users_permission_sf',array('menu_id'=>'where/'.$hasil->id,'user_group'=>'where/'.$webmaster_grup));
+                                                }								}
 								if($allow==1){
 									if($hasil->icon==NULL){$hasil->icon='fa fa-cog';}
 									if($hasil->img==''){$hasil->icon=$hasil->icon;}else{
@@ -144,7 +145,7 @@
 													if($webmaster_grup=='2706'){$allow=1;}else{
 														if($this->session->userdata("webmaster_id")=='38'){	
 															$allow=GetValue('view','users_permission',array('menu_id'=>'where/'.$hasilz->id,'user_group'=>'where/'.$webmaster_grup));}else{
-																$allow=GetValue('view','users_permission_sf',array('menu_id'=>'where/'.$hasilz->id,'user_id'=>'where/'.$webmasterid));} 
+																$allow=GetValue('view','users_permission_sf',array('menu_id'=>'where/'.$hasilz->id,'user_group'=>'where/'.$webmaster_grup));} 
 															}
 															if($allow==1){
 																if($hasilz->icon==NULL){$hasilz->icon='fa fa-cog';}

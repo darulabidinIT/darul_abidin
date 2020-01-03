@@ -53,11 +53,29 @@ if(isset($list)){
 		   </div>
                    <div class="form-group">
 			   
+			   <?php $nm_f="tingkat";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Tingkat</label>
+				   </div><div class="col-sm-9" id="tingkatdiv">
+				   <?php echo form_dropdown($nm_f,$opt_tingkat,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changetingkat(this.value)'")?>
+			   </div>
+		   </div>
+                   <div class="form-group">
+			   
+			   <?php $nm_f="title";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Nama Item</label>
+				   </div><div class="col-sm-9">
+				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='' ")?>
+			   </div>
+		   </div>
+                   <div class="form-group">
+			   
 			   <?php $nm_f="price";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Nominal</label>
 				   </div><div class="col-sm-9" id="kelasdiv">
-				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? str_replace('.',',',$val[$nm_f]) : ''),"class='currency' pattern='^\Rp \d{1,3}(.\d{3})*(\,\d+)?$' ")?>
+				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? str_replace('.',',',$val[$nm_f]) : ''),"class='' data-type='currency' pattern='^\Rp \d{1,3}(.\d{3})*(\,\d+)?$' ")?>
 			   </div>
 		   </div>
                

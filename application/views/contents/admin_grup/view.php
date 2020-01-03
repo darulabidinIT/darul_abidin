@@ -50,6 +50,10 @@
                 <i class="glyphicon glyphicon-trash icon-white"></i>
                 Delete
             </a>
+            <a class="btn btn-info" href="<?php echo base_url($this->utama)?>/auth/<?php echo $data['id']?>">
+                <i class="glyphicon glyphicon-edit icon-white"></i>
+                Akses Menu
+            </a>
         </td>
     </tr>
     <?php }?>

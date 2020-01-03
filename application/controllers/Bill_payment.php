@@ -7,7 +7,7 @@ class Bill_payment extends CI_Controller {
 		function __construct(){
                 parent::__construct();
                                 
-                permissionBiasa();
+                permissionz();
                 $this->load->library('flexigrid');
                 $this->load->helper('flexigrid');
 		}
@@ -21,7 +21,6 @@ class Bill_payment extends CI_Controller {
 	function main()
 	{
 		//Migrasi 1 Feb 14
-		//permissionBiasa();
 		//Set Global
 		//permission();
 		//$data = GetHeaderFooter();

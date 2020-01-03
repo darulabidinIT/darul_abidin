@@ -4,11 +4,11 @@ class Rekap_transaksi extends CI_Controller {
 		
 		var $utama ='rekap_transaksi';
 		var $title ='Rekap Transaksi';
-		function __construct(){
-				parent::__construct();
-                                $this->load->library('flexigrid');
-                                $this->load->helper('flexigrid');
-		}
+	function __construct(){
+		parent::__construct();
+                $this->load->library('flexigrid');
+                $this->load->helper('flexigrid');
+	}
                 
                 
 	function index()
@@ -19,7 +19,6 @@ class Rekap_transaksi extends CI_Controller {
 	function main()
 	{
 		//Migrasi 1 Feb 14
-		//permissionBiasa();
 		//Set Global
 		//permission();
 		//$data = GetHeaderFooter();

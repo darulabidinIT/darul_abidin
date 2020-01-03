@@ -14,7 +14,7 @@ class payment extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-                permissionBiasa();
+                permissionz();
 		$this->load->library('flexigrid');
                 $this->load->helper('flexigrid');
                 error_reporting(0);
@@ -27,9 +27,7 @@ class payment extends CI_Controller {
 	
 	function main()
 	{
-		//permissionBiasa();
 		//Set Global
-		//permission();
 		//$data = GetHeaderFooter();
 		$data['content'] = 'contents/'.$this->utama.'/view';
 		
@@ -139,7 +137,7 @@ class payment extends CI_Controller {
 	
 	function form($id=null){
 		
-		permissionBiasa();
+		permissionz();
 		if($id!=NULL){
 			$filter=array('id'=>'where/'.$id);
 			$data['type']='Edit';

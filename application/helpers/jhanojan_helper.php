@@ -355,7 +355,7 @@ if (!function_exists('permissionz')){
 			redirect("login");
 		}
 		$group = $CI->session->userdata('webmaster_grup');
-		$wid = $CI->session->userdata('webmaster_marketing');
+		$wid = $CI->session->userdata('webmaster_grup');
 		if($group != "2706" && $group != "1"){
 			$ref_menu = $CI->uri->segment(1);
                         //if($ref_menu=='prospek')
@@ -377,7 +377,7 @@ if (!function_exists('permissionz')){
                                 $jum_menu_admin = GetValue($type,'users_permission',array('menu_id'=>'where/'.$row->id,'user_group'=>'where/'.$group));
                                 }else{
 				//$jum_menu_admin = GetValue($type,'users_permission',array('menu_id'=>'where/'.$row->id,'user_group'=>'where/'.$group));
-                                $jum_menu_admin = GetValue($type,'users_permission_sf',array('menu_id'=>'where/'.$row->id,'user_id'=>'where/'.$wid));  //lastq();
+                                $jum_menu_admin = GetValue($type,'users_permission_sf',array('menu_id'=>'where/'.$row->id,'user_group'=>'where/'.$wid));  //lastq();
                                 }
 				if($jum_menu_admin == 0 && $ref_menu!='prospek')
 				{
@@ -406,7 +406,7 @@ if (!function_exists('izin')){
 			redirect("login");
 		}
 		$group = $CI->session->userdata('webmaster_grup');
-		$wid = $CI->session->userdata('webmaster_marketing');
+		$wid = $CI->session->userdata('webmaster_grup');
 		if($group != "2706"){
 			$ref_menu = $CI->uri->segment(1);
                         if($CI->uri->segment(1)=='prospek'){
@@ -425,7 +425,7 @@ if (!function_exists('izin')){
                                     $jum_menu_admin = GetValue($type,'users_permission',array('menu_id'=>'where/'.$row->id,'user_group'=>'where/'.$group));
                                 }else{
 				//$jum_menu_admin = GetValue($type,'users_permission',array('menu_id'=>'where/'.$row->id,'user_group'=>'where/'.$group));
-                                $jum_menu_admin = GetValue($type,'users_permission_sf',array('menu_id'=>'where/'.$row->id,'user_id'=>'where/'.$wid));}
+                                $jum_menu_admin = GetValue($type,'users_permission_sf',array('menu_id'=>'where/'.$row->id,'user_group'=>'where/'.$wid));}
                               // lastq();
 				
 				if($jum_menu_admin == 0)

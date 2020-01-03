@@ -12,7 +12,7 @@ class Dashboard extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct();
-		 permissionBiasa();
+		 permissionz('v');
 	}
 	
 	function index()
@@ -23,9 +23,7 @@ class Dashboard extends CI_Controller {
 	function main()
 	{
             
-		//permissionBiasa();
 		//Set Global
-		//permission();
 		//$data = GetHeaderFooter();
 		$data['content'] = 'contents/'.$this->utama.'/view';
 		//End Global

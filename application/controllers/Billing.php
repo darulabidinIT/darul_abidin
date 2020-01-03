@@ -18,10 +18,7 @@ class Billing extends CI_Controller {
 	
 	function main()
 	{
-		//Migrasi 1 Feb 14
-		//permissionBiasa();
 		//Set Global
-		//permission();
 		//$data = GetHeaderFooter();
 		$data['content'] = 'contents/'.$this->utama.'/view';
 		

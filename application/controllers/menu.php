@@ -7,13 +7,14 @@
   * Framework ver. : CI ver.3.1.1
 *************************************/	
 
-class menu extends CI_Controller {
+class Menu extends CI_Controller {
 	
 		var $utama ='menu';
 		var $title ='Menu';
 	function __construct()
 	{
-		parent::__construct();permissionBiasa();
+		parent::__construct();
+                permissionz();
 	}
 	
 	function index()
@@ -24,7 +25,7 @@ class menu extends CI_Controller {
 	function main()
 	{
 		//Migrasi 1 Feb 14
-		//permissionBiasa();
+		//permissionz();
 		//Set Global
 		//permission();
 		//$data = GetHeaderFooter();
@@ -39,7 +40,7 @@ class menu extends CI_Controller {
 	function form($id=null){
 		
 		
-		permissionBiasa();
+		permissionz();
 		if($id!=NULL){
 			$filter=array('id'=>'where/'.$id);
 			$data['type']='Edit';
@@ -73,6 +74,8 @@ class menu extends CI_Controller {
 		
 		if($id != NULL && $id != '')
 		{
+                    
+                        permissionz('u');
 			if(!$this->input->post('password')){unset($data['password']);}
 			else{$data['password']=md5($this->config->item('encryption_key').$this->input->post("password"));}
 			$data['modify_user_id'] = $webmaster_id;
@@ -84,6 +87,7 @@ class menu extends CI_Controller {
 		}
 		else
 		{
+                        permissionz('c');
 			if($this->input->post('password')){$data['password']=md5($this->config->item('encryption_key').$this->input->post("password"));}
 			//if(!$this->input->post('avatar')){$data['avatar']='default.png';}
 			$data['create_user_id'] = $webmaster_id;

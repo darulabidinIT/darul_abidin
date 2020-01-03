@@ -14,6 +14,7 @@ class Admin extends CI_Controller {
 	function __construct()
 	{
 		parent::__construct(); 
+                permissionz();
 	}
 	
 	function index()
@@ -23,11 +24,8 @@ class Admin extends CI_Controller {
 	
 	function main()
 	{
-			permissionBiasa();
 		//Migrasi 1 Feb 14
-		//permissionBiasa();
 		//Set Global
-		//permission();
 		//$data = GetHeaderFooter();
 		$data['content'] = 'contents/'.$this->utama.'/view';
 		$data['list']=GetAll($this->utama);
@@ -40,7 +38,6 @@ class Admin extends CI_Controller {
 	function form($id=null){
 		
 		
-		//permissionBiasa();
 		permissionFormUser($id);
 		if($id!=NULL){
 			$filter=array('id'=>'where/'.$id);
@@ -140,7 +137,6 @@ class Admin extends CI_Controller {
 	function profile($id=null){
 		
 		
-		//permissionBiasa();
 		permissionFormUser($id);
 		if($id!=NULL){
 			$filter=array('useradmin'=>'where/'.$id);
