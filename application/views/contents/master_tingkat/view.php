@@ -1,5 +1,6 @@
-<span style="font-size:24px; margin-bottom:5%; margin-top:5%;"><?php echo $this->title;?></span>
-
+<div class="well">
+    <span style="font-size:24px; margin-bottom:5%; margin-top:5%;"><?php echo $this->title;?></span>
+</div>
 <?php
 error_reporting(0);
  echo $js_grid; ?>

@@ -68,13 +68,14 @@ class Master_siswa extends CI_Controller {
             if(izin('d'))$buttons[] = array('delete','delete','btn');
             $buttons[] = array('separator');
 		
-            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record"),$colModel,'nama_lengkap','asc',$gridParams,$buttons);
+            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record"),$colModel,'nama_siswa','asc',$gridParams,$buttons,600);
 	}
 	
 	function get_flexigrid()
         {
 
             //Build contents query
+            $this->db->order_by('nama_siswa','asc');
             $this->db->select("sv_a.*")->from("$this->utama sv_a");
             
             $this->flexigrid->build_query();
@@ -239,12 +240,72 @@ class Master_siswa extends CI_Controller {
 			if(izin('c')){
                         $date=date('Y');
                         $digit=1000000+GetValue('val','sv_counter',array('id'=>'where/1'))+1;
-                        $data['no_sisda']=$date.substr($digit,1);
+                        $sisda=$date.substr($digit,1);
+                        $data['no_sisda']=$sisda;
                         $this->db->query("UPDATE sv_counter SET val=val+1 WHERE id=1");
 			$data['created_by'] = $webmaster_id;
 			$data['created_on'] = date("Y-m-d H:i:s");
 			$this->db->insert('sv_'.$this->utama, $data);
-			
+                        $lid=$this->db->insert_id();
+			$kelas_tmp=kelas_pmb(post('jenjang'));
+                        
+                        $q="SELECT * FROM sv_setup_pendaftaran WHERE id='".post('item_spp')."'";
+                        if($mid==null){
+                            //$mid=date('m');
+                            $mid = date('m', strtotime('+1 month'));
+                            $yid = date('Y', strtotime('+1 month'));
+                        }
+                        //$periode=GetAll('bill_periode',array('real_month'=>'where/'.(int)$mid))->row_array();
+                        //$cekspp=$this->db->query("");
+                        
+                        $bill=array(
+                            'type'=>'pmb',
+                            'ta'=>post('periode'),
+                            'periode'=>post('periode'),
+                            'siswa_id'=>$lid,
+                            'no_bill'=>gen_num('pmb',$sisda),
+                            'title'=>'PMB '.post('nama_siswa')." ".GetValue('title','sv_master_tahun_ajaran',array('id'=>'where/'.post('periode'))),
+                            'generate_date'=>date('Y-m-d'),
+                            'due_date'=>$yid.'-'.$mid.'-15',
+                            'created_by'=>'systemgenerated',
+                            'created_on'=>date("Y-m-d H:i:s")
+                        );
+            $this->db->insert('sv_bill',$bill);
+            $iid=$this->db->insert_id();
+            
+                   //$query=$this->db->query($q)->row_array();
+                   //lastq();
+                   $itemspp=json_decode(post('item_spp'));  
+                foreach($itemspp->item as $it) {
+                    $itempay=GetAll('setup_itempay',array('id'=>'where/'.$it))->row_array();
+                    $bill_detail=array(
+                        'bill_id'=>$iid,
+                        'type'=>$itempay['type'],
+                        'item'=>$itempay['title'],
+                        'nominal'=>$itempay['price'],
+                    );
+                    $this->db->insert('sv_bill_detail',$bill_detail);
+                }
+                foreach($itemspp->custom as $it) {
+                    
+                    $itempay=GetAll('ref_item_custom',array('id'=>'where/'.$it->item))->row_array();
+                    //print_r($it);
+                    //$data['item_']=$it->item;
+                    //$data['item_price']=$it->price;
+                    $bill_detail=array(
+                        'bill_id'=>$iid,
+                        'type'=>$it->item,
+                        'item'=>$itempay['title'],
+                        'nominal'=>$it->price,
+                    );
+                    $this->db->insert('sv_bill_detail',$bill_detail);
+                }
+                    $kelas_siswa=array(
+                        'kelas'=>$kelas_tmp,
+                        'siswa_id'=>$lid,
+                        'ta'=>post('periode')
+                    );
+                    $this->db->insert('sv_kelas_siswa',$kelas_siswa);
                         
                         
 			$this->session->set_flashdata("message", 'Sukses ditambahkan');}

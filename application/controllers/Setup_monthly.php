@@ -235,6 +235,7 @@ class Setup_monthly extends CI_Controller {
                     foreach($cs as $ct ){
                         $custom[$a]['item']=$ct['item'];
                         $custom[$a]['price']=str_replace('.','',$ct['price']);
+                        $a++;
                     }
                     $item['custom']=$custom;
                 

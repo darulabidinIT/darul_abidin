@@ -1,7 +1,7 @@
 <!--link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/smoothness/jquery-ui.css">
 <script src="//code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script-->
 
-<div class="col-md-12" style="margin-bottom:2%;">
+<div class="col-md-12 well" style="margin-bottom:2%;">
     
 <span style="font-size:24px; margin-bottom:20%; margin-top:5%;"><?php echo $this->title;?></span>
 </div>
@@ -99,7 +99,7 @@
          <div class="col-md-3">Kembali</div> <div class="col-md-6"><input type="text" id="kembalian" name="kembali" class="form-control currency" readonly></div>
      </div>
      <div class="col-md-12">
-         <div class="col-md-3">Metode</div><div class="col-md-6"> <?php echo form_dropdown('metode',array('cash'=>'Tunai','transfer'=>'Transfer'),'',"onchange='gantimetode(this.value)'")?></div>
+         <div class="col-md-3">Metode</div><div class="col-md-6"> <?php echo form_dropdown('metode',array('cash'=>'Tunai','transfer'=>'Transfer','void'=>'Void'),'',"onchange='gantimetode(this.value)'")?></div>
      </div>
      <div class="col-md-12" id="divbank" style="display:none">
          <div class="col-md-3">Bank</div><div class="col-md-6"> <?php echo form_dropdown('bank',GetOptAll('master_bank','-Bank-',array()),''," id='bankmode'")?></div>

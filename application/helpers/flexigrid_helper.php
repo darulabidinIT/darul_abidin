@@ -35,9 +35,10 @@ if (! function_exists('build_grid_js'))
 	 * @param	array with aditional parameters
 	 * @return	string
 	 */
-	function build_grid_js($grid_id,$url,$colModel,$sortname,$sortorder,$gridParams = NULL,$buttons = NULL)
+	function build_grid_js($grid_id,$url,$colModel,$sortname,$sortorder,$gridParams = NULL,$buttons = NULL, $height = NULL)
 	{
 		//Basic propreties
+            if($height==NULL) $height="window.innerHeight - 300";
 		$grid_js = '<script type="text/javascript">$(document).ready(function(){';
 //                $grid_js .= 'var x=document.getElementsByClassName("layout-grid")[0];';
 		$grid_js .= '$("#'.$grid_id.'").flexigrid({';
@@ -48,8 +49,8 @@ if (! function_exists('build_grid_js'))
 		$grid_js .= "usepager: true,";
 		$grid_js .= "singleSelect: true,";
 		$grid_js .= "useRp: true,";
-//                $grid_js .= "height: x.style.height,";
-                $grid_js .= "height: window.innerHeight - 210,";
+                $grid_js .= "height: $height,";
+                //$grid_js .= "height: window.innerHeight - 210,";
 		
 		//Other propreties
 		if (is_array($gridParams))

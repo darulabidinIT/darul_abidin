@@ -58,7 +58,7 @@
                 <td><?php echo $siswa['no_sisda'];?></td>
                 <td><?php echo $siswa['nama_siswa'];?></td>
                 <td><?php echo $siswa['nama_bunda'];?></td>
-                <td><a class="btn btn-info" href="<?php echo base_url()?>kelas_siswa/form_item/<?php echo $dk['id']?>">Set SPP Item</a></td>
+                <td><a class="btn btn-info" href="<?php echo base_url()?>kelas_siswa/form_item/<?php echo $dk['id']?>">Set SPP Item</a> <a class="btn btn-info" href="<?php echo base_url()?>kelas_siswa/form_move/<?php echo $dk['id']?>">Pindah Kelas</a></td>
               </tr>
               <?php $no++; }?>
           </tbody>

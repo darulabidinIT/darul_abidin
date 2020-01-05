@@ -1,5 +1,12 @@
-<span style="font-size:24px; margin-bottom:5%; margin-top:5%;"><?php echo $this->title;?></span>
+<div class="well">
+    <span style="font-size:24px; margin-bottom:5%; margin-top:5%;"><?php echo $this->title;?></span>
+</div>
 
+ <?php if($this->session->flashdata('message')){?>
+<div class="alert alert-success" role="alert">
+                        <?php echo $this->session->flashdata('message') ?>
+                        </div>
+ <?php }?>
 <?php
 error_reporting(0);
  echo $js_grid; ?>
@@ -30,6 +37,12 @@ function btn(com,grid)
     if (com == 'rekaptagihan' ) {
        // alert('ok');
 		window.location = _base_url + controller + 'rekap_bulan/';
+    }
+    if (com == 'buat spp manual' ) {
+		window.location = _base_url + controller + 'form_manual/';
+    }
+    if (com == 'buat tagihan custom' ) {
+		window.location = _base_url + controller + 'form_custom/';
     }
     if (com == 'select' )
     {

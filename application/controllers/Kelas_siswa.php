@@ -306,6 +306,37 @@ class Kelas_siswa extends CI_Controller {
 		
 		$this->load->view('layout/main',$data);
 	}
+        function form_move($id=null){
+		
+		if($id!=NULL){
+		permissionz('u');
+			$filter=array('id'=>'where/'.$id);
+			$data['type']='Edit';
+			$data['list']=GetAll($this->utama,$filter);
+		}
+		else{
+			
+		permissionz('c');
+			$data['type']='New';
+		}
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array());
+                $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array());
+		
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
+                $data['opt_leader']=GetOptAll('sv_master_siswa','-Leader-',array(),'nama_lengkap');
+                $data['opt_leader'][0]='-Tidak Ada Leader';
+                //array_push($data['opt_leader'],$def);
+		$data['content'] = 'contents/'.$this->utama.'/edit_move';
+                
+		//End Global
+		
+		//Attendance
+		
+		$this->load->view('layout/main',$data);
+	}
         function item($id){
             $data['id']=$id;
             $data['id_data']=$this->input->post('id');
@@ -340,8 +371,15 @@ class Kelas_siswa extends CI_Controller {
                 else{
                     $item['item']=array();
                 }
-                if($this->input->post('custom')){
-                    $item['custom']=$this->input->post('custom');
+                if($this->input->post('custom')){ 
+                    $cs=post('custom');
+                    $a=1;
+                    foreach($cs as $ct ){
+                        $custom[$a]['item']=$ct['item'];
+                        $custom[$a]['price']=str_replace('.','',$ct['price']);
+                        $a++;
+                    }
+                    $item['custom']=$custom;
                 
                 }
                 else{
@@ -368,22 +406,59 @@ class Kelas_siswa extends CI_Controller {
 				$this->session->set_flashdata("message", 'Anda Tidak Diizinkan Mengedit Data');
 			}
 		}
-//		else
-//		{
-//			
-//			
-//			if(izin('c')){
-//			$data['created_by'] = $webmaster_id;
-//			$data['created_on'] = date("Y-m-d H:i:s");
-//			$this->db->insert('sv_'.$this->utama, $data);
-//			
-//                        
-//                        
-//			$this->session->set_flashdata("message", 'Sukses ditambahkan');}
-//			else{
-//				$this->session->set_flashdata("message", 'Anda Tidak Diizinkan Menambah Data');
-//			}
-//		}
+		
+		
+		redirect($this->utama);
+		
+	}
+        function move_submit(){
+		$webmaster_id=$this->session->userdata('webmaster_id');
+		$id = $this->input->post('id');
+		$GetColumns = GetColumns('sv_'.$this->utama);
+		foreach($GetColumns as $r)
+		{
+			$data[$r['Field']] = $this->input->post($r['Field']);
+			$data[$r['Field']."_temp"] = $this->input->post($r['Field']."_temp");
+			
+			if(!$data[$r['Field']] && !$data[$r['Field']."_temp"]) unset($data[$r['Field']]);
+			unset($data[$r['Field']."_temp"]);
+		}
+                
+		
+		if($id != NULL && $id != '')
+		{
+			/* if(!$this->input->post('password')){unset($data['password']);}
+			else{$data['password']=md5($this->config->item('encryption_key').$this->input->post("password"));} */
+			
+			if(izin('u')){
+			$data['modify_by'] = $webmaster_id;
+			$data['modify_on']=date("Y-m-d");
+			$this->db->where("id", $id);
+			$this->db->update('sv_'.$this->utama, $data);
+                        $siswa=post('nama_');
+                        $kelas=GetValue('title','master_kelas',array('id'=>'where/'.post('kelas')));
+                        
+			$this->session->set_flashdata("message", $siswa.' Sukses Dipindahkan ke kelas '.$kelas);}
+			else{
+				$this->session->set_flashdata("message", 'Anda Tidak Diizinkan Mengedit Data');
+			}
+		}
+		else
+		{
+			
+			
+			if(izin('c')){
+			$data['created_by'] = $webmaster_id;
+			$data['created_on'] = date("Y-m-d H:i:s");
+			$this->db->insert('sv_'.$this->utama, $data);
+			
+                        
+                        
+			$this->session->set_flashdata("message", 'Sukses ditambahkan');}
+			else{
+				$this->session->set_flashdata("message", 'Anda Tidak Diizinkan Menambah Data');
+			}
+		}
 		//divisi
 		
 		

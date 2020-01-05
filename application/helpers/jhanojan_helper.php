@@ -2350,4 +2350,41 @@ function ambilta($date=null){
     $q=$CI->db->query("SELECT id FROM sv_master_tahun_ajaran WHERE '$date' BETWEEN start AND end")->row_array();
     return $q['id'];
 }
+function gen_num($mod,$sisda=null,$ta=null){
+    $CI=&get_instance();
+   if ($ta==null) $ta=ambilta();
+    $q="SELECT * FROM sv_counter WHERE title='".$mod."' AND ta='$ta' ";
+    //echo $q;die();
+    $tgl=date('d')+substr($sisda, -1);
+    if($tgl % 2 == 0) {$cd=622;}
+    else{ $cd=621;}
+	$query=$CI->db->query($q);
+	if($query->num_rows()==0){
+			$CI->db->insert('sv_counter',array('title'=>$mod,'ta'=>$ta,'val'=>0,'last_update'=>date("Y-m-d H:i:s")));
+			$query=$CI->db->query($q);
+	}
+	$lastnum=$query->row();
+	$num=$lastnum->val+1;
+        $CI->db->query("UPDATE sv_counter SET val=$num,last_update='".date("Y-m-d H:i:s")."' WHERE title='$mod' AND ta=$ta");
+        $digit=1000000;
+        $penambah=$digit+$num;
+        $title=strtoupper($mod).'/'.$sisda.'/'.date('dmY').'/'.$cd.substr($penambah,1);
+        return $title;
+        
+}
+function add_num($mod,$ta=null){
+   if ($ta==null) $ta=ambilta();
+		$CI=&get_instance();
+		$CI->db->query("UPDATE sv_counter SET counter=counter+1,last_update='".date("Y-m-d H:i:s")."' WHERE title='$mod'");
+}
+function kelas_pmb($j){
+    switch($j):
+        case 1 :  return 42;
+        case 2 :  return 43;
+        case 3 :  return 44;
+        case 4 :  return 45;
+        case 5 :  return 46;
+        case 6 :  return 47;
+    endswitch;
+}
 ?>

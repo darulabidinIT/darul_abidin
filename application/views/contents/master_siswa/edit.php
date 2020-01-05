@@ -33,6 +33,16 @@ if(isset($list)){
 				<?php echo form_hidden('formid',isset($_GET['formid']) ? $_GET['formid'] : '')?>
 			
 		   <fieldset class="col-md-6">
+                       
+                   <div class="form-group">
+			   
+			   <?php $nm_f="tanggal_daftar";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Tanggal Daftar</label>
+				   </div><div class="col-sm-9">
+				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : date('Y-m-d')) ?>" class="col-sm-2 date-picker">
+			   </div>
+		   </div>
 		   <div class="form-group">
 			   
 			   <?php $nm_f="nama_siswa";?>
@@ -140,6 +150,24 @@ if(isset($list)){
 		   </div>
 		   <div class="form-group">
 			   
+			   <?php $nm_f="asal_sekolah";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Sekolah Asal</label>
+				   </div><div class="col-sm-9">
+				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-5">
+			   </div>
+		   </div>
+		   <div class="form-group">
+			   
+			   <?php $nm_f="stat_sekolah_asal";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Status Sekolah Asal</label>
+				   </div><div class="col-sm-9">
+				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-2">
+			   </div>
+		   </div>
+		   <div class="form-group">
+			   
 			   <?php $nm_f="periode";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
@@ -207,7 +235,7 @@ if(isset($list)){
                    
                    <div class="form-group">
 			   
-			   <?php $nm_f="nama_bunda";?>
+			   <?php $nm_f="kerja_bunda";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Pekerjaan</label>
 				   </div><div class="col-sm-9">
@@ -230,6 +258,36 @@ if(isset($list)){
 				   <label for="<?php echo $nm_f?>">Email Orangtua</label>
 				   </div><div class="col-sm-9">
 				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-4">
+			   </div>
+		   </div>
+               
+                    <div class="form-group">
+			   
+			   <?php $nm_f="anak_ke";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Anak Ke</label>
+				   </div><div class="col-sm-9">
+				   <input type="number" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-4">
+			   </div>
+		   </div>
+               
+                    <div class="form-group">
+			   
+			   <?php $nm_f="jumlah_saudara";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Jumlah Saudara</label>
+				   </div><div class="col-sm-9">
+				   <input type="number" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-4">
+			   </div>
+		   </div>
+               
+                    <div class="form-group">
+			   
+			   <?php $nm_f="nama_saudara";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Nama Saudara</label>
+				   </div><div class="col-sm-9">
+                                       <textarea name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" class="col-sm-4" ><?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?></textarea>
 			   </div>
 		   </div>
                    <div class="form-group">
@@ -275,6 +333,15 @@ if(isset($list)){
 				   <label for="<?php echo $nm_f?>">Negara</label>
 				   </div><div class="col-sm-9">
 				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-4">
+			   </div>
+		   </div>
+                   <div class="form-group">
+			   
+			   <?php $nm_f="jarak_rumah_sekolah";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Jarak Rumah ke Sekolah</label>
+				   </div><div class="col-sm-9">
+				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-2">
 			   </div>
 		   </div>
            </fieldset>

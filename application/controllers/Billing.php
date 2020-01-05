@@ -54,8 +54,11 @@ class Billing extends CI_Controller {
                 'showTableToggleBtn' => TRUE
 		);
         
-           $buttons[] = array('select','check','btn');
+            $buttons[] = array('select','check','btn');
             $buttons[] = array('deselect','uncheck','btn');
+            $buttons[] = array('separator');
+            $buttons[] = array('buat spp manual','add','btn');
+            $buttons[] = array('buat tagihan custom','add','btn');
             $buttons[] = array('separator');
             $buttons[] = array('cetak tagihan','edit','btn');
             $buttons[] = array('rekaptagihan','edit','btn');
@@ -384,8 +387,8 @@ class Billing extends CI_Controller {
                 'ta'=>$query['ta'],
                 'periode'=>$periode['id'],
                 'siswa_id'=>$query['siswa_id'],
-                'no_bill'=>$periode['id'].$query['siswa_id'],
-                'title'=>'SPP '.$periode['title']." ".$yid,
+                'no_bill'=>gen_num('spp',GetValue('no_sisda','master_siswa',array('id'=>'where/'.$query['siswa_id']))).'/'.$periode['id'],
+                'title'=>'SPP '.GetValue('nama_siswa','master_siswa',array('id'=>'where/'.$query['siswa_id'])).' '.$periode['title']." ".$yid,
                 'generate_date'=>date('Y-m-d'),
                 'due_date'=>$yid.'-'.$mid.'-15',
                 'created_by'=>'systemgenerated',
@@ -425,23 +428,44 @@ class Billing extends CI_Controller {
         }
         }
         function generate_billing($id=null,$month=true,$mid=null,$yid=null){
-            $q="SELECT * FROM sv_kelas_siswa WHERE item_spp IS NOT NULL";
+            //print_mz($this->input->post());
+            $mess="";
+            $q="SELECT * FROM sv_kelas_siswa WHERE item_spp IS NOT NULL ";
+            
+            if(post('ta') && post('siswa_id')) $q.="AND ta='".post('ta')."' AND siswa_id='".post('siswa_id')."'";
+            
             
             $queries=$this->db->query($q)->result_array();
-            foreach($queries as $query){
-                
             if($mid==null){
                 //$mid=date('m');
                 $mid = date('m', strtotime('+1 month'));
                 $yid = date('Y', strtotime('+1 month'));
             }
-            $periodes=$this->db->query("SELECT * FROM sv_bill_periode WHERE id<=6")->result_array();
+            foreach($queries as $query){
+                $p="SELECT * FROM sv_bill_periode ";
+                if(post('periode')){
+                    $pselect=implode(',',post('periode'));
+                }
+                else{
+                    $pselect=GetValue('id','sv_bill_periode',array('real_month'=>'where/'.$mid));
+                }
+                $p.="WHERE id IN ($pselect) ";
+            
+            $periodes=$this->db->query($p)->result_array();
             foreach($periodes as $periode){
             //$periode=GetAll('bill_periode',array('real_month'=>'where/'.(int)$mid))->row_array();
             //
             //$cekspp=$this->db->query("");
+                
+                $sis_detail=GetAll('master_siswa',array('id'=>'where/'.$query['siswa_id']))->row_array();
                 $mid=$periode['real_month'];
-                $yid=2019;
+                if($periode['id']>=1 && $periode['id']<=6){
+                    $yid=substr(GetValue('start','master_tahun_ajaran',array('id'=>'where/'.post('ta'))),0,4);
+                
+                }else{
+                    
+                    $yid=substr(GetValue('end','master_tahun_ajaran',array('id'=>'where/'.post('ta'))),0,4);
+                }
             $es=$this->db->query("SELECT * FROM sv_bill WHERE ta='".$query['ta']."' AND periode='".$periode['id']."' AND siswa_id='".$query['siswa_id']."' AND status='unpaid'");
             if($es->num_rows()==0){
             $bill=array(
@@ -449,8 +473,8 @@ class Billing extends CI_Controller {
                 'ta'=>$query['ta'],
                 'periode'=>$periode['id'],
                 'siswa_id'=>$query['siswa_id'],
-                'no_bill'=>$periode['id'].$query['siswa_id'],
-                'title'=>'SPP '.$periode['title']." ".$yid,
+                'no_bill'=>gen_num('spp',$sis_detail['no_sisda']).'/'.$periode['id'],
+                'title'=>'SPP '.$sis_detail['nama_siswa'].' '.$periode['title']." ".$yid,
                 'generate_date'=>date('Y-m-d'),
                 'due_date'=>$yid.'-'.$mid.'-15',
                 'created_by'=>'systemgenerated',
@@ -484,13 +508,15 @@ class Billing extends CI_Controller {
                     );
                     $this->db->insert('sv_bill_detail',$bill_detail);
                 }
+                $mess.="SPP ".$sis_detail['nama_siswa']." ".$periode['title']."-".$yid." Sukses Dibuat <br>";
+                
         }
-        else{
-            echo "Billing sudah ada";
+            else{
+                $mess.="SPP ".$sis_detail['nama_siswa']." ".$periode['title']."-".$yid." Sudah Ada Dibuat <br>";       
             }
-            }
-            
-            
+        }
+            $this->session->set_flashdata('message',$mess);
+            redirect('billing');
         }
         }
         function rekap_bulan(){
@@ -498,4 +524,176 @@ class Billing extends CI_Controller {
 		header("Content-Disposition: attachment; filename=Rekap-Tagihan-SPP".date('YmdHis').".xls");
             $this->load->view('contents/billing/rekap');
         }
+        function form_manual($id=null){
+		
+		if($id!=NULL){
+		permissionz('u');
+			$filter=array('id'=>'where/'.$id);
+			$data['type']='Edit';
+			$data['list']=GetAll($this->utama,$filter);
+		}
+		else{
+			
+		permissionz('c');
+			$data['type']='New';
+		}
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array());
+                $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array());
+		
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
+                $data['opt_leader']=GetOptAll('sv_master_siswa','-Leader-',array(),'nama_lengkap');
+                $data['opt_leader'][0]='-Tidak Ada Leader';
+                $data['opt_periode']=GetOptAll('sv_bill_periode','',array());
+                //array_push($data['opt_leader'],$def);
+		$data['content'] = 'contents/'.$this->utama.'/edit_manual';
+                
+                $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".ambilta()."' ORDER BY b.nama_siswa")->result_array();
+                $opt_all['']="-Siswa-";
+                foreach($siswa as $ss){
+                    $opt_all[$ss['siswa_id']]=$ss['nama_siswa']." <b>(".$ss['kelas_name'].")</b>";
+                }
+                $data['opt_siswa']=$opt_all;
+                
+		//End Global
+		
+		//Attendance
+		
+		$this->load->view('layout/main',$data);
+	}
+        function form_custom($id=null){
+		
+		if($id!=NULL){
+		permissionz('u');
+			$filter=array('id'=>'where/'.$id);
+			$data['type']='Edit';
+			$data['list']=GetAll($this->utama,$filter);
+		}
+		else{
+			
+		permissionz('c');
+			$data['type']='New';
+		}
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array());
+                $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array());
+		
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
+                $data['opt_leader']=GetOptAll('sv_master_siswa','-Leader-',array(),'nama_lengkap');
+                $data['opt_leader'][0]='-Tidak Ada Leader';
+                //array_push($data['opt_leader'],$def);
+		$data['content'] = 'contents/'.$this->utama.'/edit_spp';
+                
+                $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".ambilta()."' ORDER BY b.nama_siswa")->result_array();
+                $opt_all['']="-Siswa-";
+                foreach($siswa as $ss){
+                    $opt_all[$ss['siswa_id']]=$ss['nama_siswa']." <b>(".$ss['kelas_name'].")</b>";
+                }
+                $data['opt_siswa']=$opt_all;
+                
+		//End Global
+		
+		//Attendance
+		
+		$this->load->view('layout/main',$data);
+	}
+        function custom_submit(){
+            $kelas_tmp=kelas_pmb(post('jenjang'));
+                        
+                        $q="SELECT * FROM sv_setup_pendaftaran WHERE id='".post('item_spp')."'";
+                        if($mid==null){
+                            //$mid=date('m');
+                            $mid = date('m', strtotime('+1 month'));
+                            $yid = date('Y', strtotime('+1 month'));
+                        }
+                        //$periode=GetAll('bill_periode',array('real_month'=>'where/'.(int)$mid))->row_array();
+                        //$cekspp=$this->db->query("");
+                        $siswa=GetAll('master_siswa',array('id'=>'where/'.post('siswa_id')))->row_array();
+                        $bill=array(
+                            'type'=>'custom',
+                            'ta'=>post('ta'),
+                            'periode'=>post('ta'),
+                            'siswa_id'=>post('siswa_id'),
+                            'no_bill'=>gen_num('cst',$siswa['no_sisda']),
+                            'title'=>post('title'),
+                            'generate_date'=>post('generate_date'),
+                            'due_date'=>post('due_date'),
+                            'created_by'=>$this->session->userdata('webmaster_id'),
+                            'created_on'=>date("Y-m-d H:i:s")
+                        );
+            $this->db->insert('sv_bill',$bill);
+            $iid=$this->db->insert_id();
+            
+                   //$query=$this->db->query($q)->row_array();
+                   //lastq();
+            if($this->input->post('item')){
+                    $item['item']=$this->input->post('item');}
+                else{
+                    $item['item']=array();
+                }
+                if($this->input->post('custom')){ 
+                    $cs=post('custom');
+                    $a=1;
+                    foreach($cs as $ct ){
+                        $custom[$a]['item']=$ct['item'];
+                        $custom[$a]['price']=str_replace('.','',$ct['price']);
+                        $a++;
+                    }
+                    $item['custom']=$custom;
+                
+                }
+                else{
+                    $item['custom']=array();
+                }
+                $items=json_encode($item);
+                   $itemspp=json_decode($items);  
+                foreach($itemspp->item as $it) {
+                    $itempay=GetAll('setup_itempay',array('id'=>'where/'.$it))->row_array();
+                    $bill_detail=array(
+                        'bill_id'=>$iid,
+                        'type'=>$itempay['type'],
+                        'item'=>$itempay['title'],
+                        'nominal'=>$itempay['price'],
+                    );
+                    $this->db->insert('sv_bill_detail',$bill_detail);
+                }
+                foreach($itemspp->custom as $it) {
+                    
+                    $itempay=GetAll('ref_item_custom',array('id'=>'where/'.$it->item))->row_array();
+                    //print_r($it);
+                    //$data['item_']=$it->item;
+                    //$data['item_price']=$it->price;
+                    $bill_detail=array(
+                        'bill_id'=>$iid,
+                        'type'=>$it->item,
+                        'item'=>$itempay['title'],
+                        'nominal'=>$it->price,
+                    );
+                    $this->db->insert('sv_bill_detail',$bill_detail);
+                }
+                $this->session->set_flashdata('message','Billing Custom Sukses Dibuat');
+                redirect('billing');
+        }
+        function item($id){
+            $data['id']=$id;
+            $data['id_data']=$this->input->post('id');
+            $this->load->view('contents/billing/item',$data);
+        }
+	function ambil_item(){
+            $v=$this->input->post('v');
+            $resp['price']=uang(GetValue('price','sv_setup_itempay',array('id'=>'where/'.$v)));
+            //lastq();
+            echo json_encode($resp);
+        }
+        
+        function item_custom($id){
+            $data['id']=$id;
+            $data['id_data']=$this->input->post('id');
+            $this->load->view('contents/billing/item_custom',$data);
+        }
+        
 }

@@ -104,10 +104,7 @@ class payment extends CI_Controller {
             $record_items = array();
 
             foreach ($records['records']->result() as $row)
-            {/*
-			if($row->status=='y'){$status='Aktif';}
-			elseif($row->status=='n'){$status='Tidak Aktif';}
-			elseif($row->status=='s'){$status='Suspended';}*/
+            {
 				
                 $record_items[] = array(
                 $row->id,
@@ -158,8 +155,8 @@ class payment extends CI_Controller {
 		//$data['opt']=GetOptAll('menu','-Parents-');
                 $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
                 $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
-                $ta=$this->db->query("SELECT * FROM sv_master_tahun_ajaran WHERE (start<=CURDATE() AND end >=CURDATE())")->row_array();
-                $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".$ta['id']."' ORDER BY b.nama_siswa")->result_array();
+                //$ta=ambilta();
+                $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".ambilta()."' ORDER BY b.nama_siswa")->result_array();
                 $opt_all['']="-Siswa-";
                 foreach($siswa as $ss){
                     $opt_all[$ss['siswa_id']]=$ss['nama_siswa']." <b>(".$ss['kelas_name'].")</b>";
@@ -250,7 +247,8 @@ class payment extends CI_Controller {
     function submit_pay(){
         //print_mz($this->input->post());
         $bill=$this->input->post('id_bill');
-        $data['no_payment']=strtotime(date('Y-m-d')).rand(111,999);
+        if(post('metode')!='void'){
+        $data['no_payment']= gen_num('pay',GetValue('no_sisda','master_siswa',array('id'=>'where/'.post('siswa'))));
         $data['total']=str_replace('.','',$this->input->post('total'));
         $data['bayar']=str_replace('.','',$this->input->post('bayar'));
         $data['kembali']=str_replace('.','',$this->input->post('kembali'));
@@ -259,7 +257,7 @@ class payment extends CI_Controller {
         $data['siswa_id']=$this->input->post('siswa');
         $data['ta']=$this->input->post('ta');
         $data['created_on']=date("Y-m-d H:i:s");
-        $data['created_by']='sysadmin';
+        $data['created_by']=$this->session->userdata('webmaster_id');
         
         $data['bill_id']=json_encode($bill);
         
@@ -268,6 +266,14 @@ class payment extends CI_Controller {
         $bill=implode(',',$bill);
         $this->db->query("UPDATE sv_bill SET status='paid' WHERE id IN ($bill)");
         redirect("payment/sumpayment/".$iid);
+        }
+        else{
+            
+            $bill=implode(',',$bill);
+            $this->db->query("UPDATE sv_bill SET status='void' WHERE id = $bill");
+            $this->session->set_flashdata('message','Tagihan Berhasil di VOID');
+            redirect('payment');
+        }
     }
     function sumpayment($id){
                 $data['datapay']=GetAll('bill_payment',array('id'=>'where/'.$id))->row_array();
