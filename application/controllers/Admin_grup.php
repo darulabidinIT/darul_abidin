@@ -145,7 +145,7 @@ class Admin_Grup extends CI_Controller {
 		
 		$user=GetValue('id','admin_grup',array('title'=>'where/'.$this->input->post('user_group')));
 		foreach($menu as $m){
-				$cek=GetAll('users_permission_sf',array('user_id'=>'where/'.$user,'menu_id'=>'where/'.$m))->num_rows();
+				$cek=GetAll('users_permission_sf',array('user_group'=>'where/'.$user,'menu_id'=>'where/'.$m))->num_rows();
 				$data['menu_id']=$m;
 				$data['create']=($m_c[$m] ? '1':'0');
 				$data['view']=($m_v[$m] ? '1':'0');
@@ -163,7 +163,7 @@ class Admin_Grup extends CI_Controller {
 				}
                 }
 		foreach($submenu as $sm){
-				$cek=GetAll('users_permission_sf',array('user_id'=>'where/'.$user,'menu_id'=>'where/'.$sm))->num_rows();
+				$cek=GetAll('users_permission_sf',array('user_group'=>'where/'.$user,'menu_id'=>'where/'.$sm))->num_rows();
 				$data['menu_id']=$sm;
 				$data['create']=($s_c[$sm] ? '1':'0');
 				$data['view']=($s_v[$sm] ? '1':'0');

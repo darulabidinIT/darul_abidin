@@ -515,6 +515,19 @@ class Rekap_transaksi extends CI_Controller {
             $this->load->view('contents/billing/rekap');
         }
         function load(){
-            $this->load->view('contents/'.$this->utama.'/tabledata.php');
+            //$query="SELECT a.*,b.name kasir FROM sv_bill_payment a left join sv_admin b on a.created_by = b.id";
+            $this->db->select("a.*,b.name kasir,c.nama_siswa nama_siswa,e.title kelas_,g.title jenjang_,i.title tahun_ajaran_")->from("sv_bill_payment a");
+            $this->db->join("sv_admin b","a.created_by = b.id","left");
+            $this->db->join("sv_master_siswa c","a.siswa_id = c.id","left");
+            $this->db->join("sv_kelas_siswa d","a.siswa_id = d.siswa_id and d.ta=a.ta","left");
+            $this->db->join("sv_master_kelas e","d.kelas = e.id","left");
+            $this->db->join("sv_master_tingkat f","e.tingkat = f.id","left");
+            $this->db->join("sv_master_jenjang g","f.jenjang = g.id","left");
+            $this->db->join("sv_master_tahun_ajaran i","a.ta = i.id","left");
+            
+            $data['qpayment']=$this->db->get()->result();
+            //lastq();
+            //print_r(post('fd'));
+            $this->load->view('contents/'.$this->utama.'/tabledata.php',$data);
         }
 }

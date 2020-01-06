@@ -9,7 +9,7 @@
 <div class="col-md-12" style="margin-bottom:10px">
     <fieldset>
         <legend>Search Terms</legend>
-        <form method="post">
+        <form method="post" id="get_rekap">
         <div class="col-md-12">
             <div class="row">
                 <?php $nm_f="no_sisda";?>
@@ -142,8 +142,9 @@ setInterval("$('#flex1').flexReload()",50000 );
                         });
                     }
                     function caridata(){
+                        var formdata = $('#get_rekap').serializeArray();
                         $('#tabledata').append("<img src='<?php echo base_url()?>assets/img/load.gif' width='5px'></img>");
-                        $('#tabledata').load('<?php echo base_url()?>rekap_transaksi/load/',{},function(e){
+                        $('#tabledata').load('<?php echo base_url()?>rekap_transaksi/load/',{fd:formdata},function(e){
                                 
                         });
                         
