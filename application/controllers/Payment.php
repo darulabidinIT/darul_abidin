@@ -261,10 +261,25 @@ class payment extends CI_Controller {
         
         $data['bill_id']=json_encode($bill);
         
+        $bill_imp=implode(',',$bill);
+        
         $this->db->insert('sv_bill_payment',$data);
         $iid=$this->db->insert_id();
-        $bill=implode(',',$bill);
-        $this->db->query("UPDATE sv_bill SET status='paid' WHERE id IN ($bill)");
+        
+        $billd=$this->db->query("SELECT SUM(nominal) as total,type FROM sv_bill_detail WHERE bill_id IN ($bill_imp) GROUP BY type")->result_array();
+        foreach($billd as $bd){
+            $pay_detail['payment_id']=$iid;
+            $pay_detail['type']=$bd['type'];
+            $pay_detail['total']=$bd['total'];
+            $pay_detail['created_on']=date('Y-m-d H:i:s');
+            $pay_detail['created_by']=$this->session->userdata('webmaster_id');
+            
+            $this->db->insert('sv_bill_payment_detail',$pay_detail);
+            
+        }
+        
+        
+        $this->db->query("UPDATE sv_bill SET status='paid' WHERE id IN ($bill_imp)");
         redirect("payment/sumpayment/".$iid);
         }
         else{
