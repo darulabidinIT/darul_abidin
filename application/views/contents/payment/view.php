@@ -56,7 +56,7 @@
      
                    <div class="form-group" style="margin-bottom:20px!important;">
 			   
-			   <?php $nm_f="title";?>
+			   <?php $nm_f="siswa";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Siswa</label>
 				   </div><div class="col-sm-9" id="siswadiv">

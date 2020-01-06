@@ -255,7 +255,7 @@ class payment extends CI_Controller {
         $data['metode']=$this->input->post('metode');
         $data['bank']=$this->input->post('bank');
         $data['siswa_id']=$this->input->post('siswa');
-        $data['ta']=$this->input->post('ta');
+        $data['ta']=ambilta();
         $data['created_on']=date("Y-m-d H:i:s");
         $data['created_by']=$this->session->userdata('webmaster_id');
         
