@@ -34,9 +34,20 @@ function btn(com,grid)
     if (com == 'add' ) {
 		window.location = _base_url + controller + 'form/';
     }
-    if (com == 'rekaptagihan' ) {
+   if (com == 'rekap tagihan pg' ) {
        // alert('ok');
-		window.location = _base_url + controller + 'rekap_bulan/';
+		window.location = _base_url + controller + 'rekap_bulan/2';
+    }
+    if (com == 'rekap tagihan tk' ) {
+       // alert('ok');
+		window.location = _base_url + controller + 'rekap_bulan/3';
+    }
+    if (com == 'rekap tagihan sd' ) {
+       // alert('ok');
+		window.location = _base_url + controller + 'rekap_bulan/5';
+    }
+    if (com == 'rekap tagihan smp' ) {
+		window.location = _base_url + controller + 'rekap_bulan/6';
     }
     if (com == 'buat spp manual' ) {
 		window.location = _base_url + controller + 'form_manual/';

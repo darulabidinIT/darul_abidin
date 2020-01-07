@@ -515,6 +515,12 @@ class Rekap_transaksi extends CI_Controller {
             $this->load->view('contents/billing/rekap');
         }
         function load(){
+            
+            foreach(post('fd') as $fd){
+                //$post[$i]['field']=$fd['name'];
+                $post[$fd['name']]=$fd['value'];
+                //$i++;
+            }
             //$query="SELECT a.*,b.name kasir FROM sv_bill_payment a left join sv_admin b on a.created_by = b.id";
             $this->db->select("a.*,b.name kasir,c.nama_siswa nama_siswa,e.title kelas_,g.title jenjang_,i.title tahun_ajaran_")->from("sv_bill_payment a");
             $this->db->join("sv_admin b","a.created_by = b.id","left");
@@ -525,9 +531,93 @@ class Rekap_transaksi extends CI_Controller {
             $this->db->join("sv_master_jenjang g","f.jenjang = g.id","left");
             $this->db->join("sv_master_tahun_ajaran i","a.ta = i.id","left");
             
+            if(!empty($post['no_sisda'])) $this->db->where("c.no_sisda",$post['no_sisda']);
+            if(!empty($post['nama_siswa'])) $this->db->where("c.nama_siswa",$post['nama_siswa']);
+            if(!empty($post['jenjang'])) $this->db->where("g.id",$post['jenjang']);
+            if(!empty($post['tingkat'])) $this->db->where("f.id",$post['tingkat']);
+            if(!empty($post['periode'])) $this->db->where("a.ta",$post['periode']);
+            if(!empty($post['tgl_start'])) $this->db->where("a.created_on >= '".$post['tgl_start']."'");
+            if(!empty($post['tgl_end'])) $this->db->where("a.created_on <= '".$post['tgl_end']."'");
+            
             $data['qpayment']=$this->db->get()->result();
             //lastq();
             //print_r(post('fd'));
+            //$i=0;
+           // echo "<pre>";
+           // print_r($post);
+           // echo "</pre>";
             $this->load->view('contents/'.$this->utama.'/tabledata.php',$data);
+        }
+        function rekapsetoran(){
+             $data['tk_spp_tunai']=$this->query_rekap(array(3,4),1,'cash');
+             $data['tk_spp_transfer']=$this->query_rekap(array(3,4),1,'transfer');
+             $data['tk_du_tunai']=$this->query_rekap(array(3,4),87,'cash');
+             $data['tk_du_transfer']=$this->query_rekap(array(3,4),87,'transfer');
+             $data['tk_pmb_tunai']=$this->query_rekap(array(3,4),8,'cash');
+             $data['tk_pmb_transfer']=$this->query_rekap(array(3,4),8,'transfer');
+             
+             
+             $data['sd_spp_tunai']=$this->query_rekap(5,1,'cash');
+             $data['sd_spp_transfer']=$this->query_rekap(5,1,'transfer');
+             $data['sd_pmb_tunai']=$this->query_rekap(5,8,'cash');
+             $data['sd_pmb_transfer']=$this->query_rekap(5,8,'transfer');
+            
+             $data['smp_spp_tunai']=$this->query_rekap(6,1,'cash');
+             $data['smp_spp_transfer']=$this->query_rekap(6,1,'transfer');
+             $data['smp_pmb_tunai']=$this->query_rekap(6,8,'cash');
+             $data['smp_pmb_transfer']=$this->query_rekap(6,8,'transfer');
+             
+             
+             $data['tk_ss_tunai']=$this->query_rekap(array(3,4),'ss','cash');
+             $data['tk_ss_transfer']=$this->query_rekap(array(3,4),'ss','transfer');
+             
+             
+             $data['sd_ss_tunai']=$this->query_rekap(5,'ss','cash');
+             $data['sd_ss_transfer']=$this->query_rekap(5,'ss','transfer');
+             
+             $data['smp_ss_tunai']=$this->query_rekap(6,'ss','cash');
+             $data['smp_ss_transfer']=$this->query_rekap(6,'ss','transfer');
+             
+             
+             
+            header("Content-type: application/vnd-ms-excel");
+		header("Content-Disposition: attachment; filename=Rekap-Setoran".date('YmdHis').".xls");
+            $this->load->view('contents/rekap_transaksi/rekap_setoran',$data);
+            
+        }
+        function query_rekap($jenjang,$tipe,$metode){
+            $this->db->select("a.id")->from("sv_bill_payment a");
+            $this->db->join("sv_admin b","a.created_by = b.id","left");
+            $this->db->join("sv_master_siswa c","a.siswa_id = c.id","left");
+            $this->db->join("sv_kelas_siswa d","a.siswa_id = d.siswa_id and d.ta=a.ta","left");
+            $this->db->join("sv_master_kelas e","d.kelas = e.id","left");
+            $this->db->join("sv_master_tingkat f","e.tingkat = f.id","left");
+            $this->db->join("sv_master_jenjang g","f.jenjang = g.id","left");
+            $this->db->join("sv_master_tahun_ajaran i","a.ta = i.id","left");
+            
+            $this->db->where("a.created_on  BETWEEN  '".date('Y-m-d')." 00:00:00' AND '".date('Y-m-d')." 23:59:59' ");
+            if(is_array($jenjang)){
+                $jn="(g.id = ".$jenjang[0]." OR g.id = ".$jenjang[1].")";
+            }else{
+                $jn="g.id = $jenjang";
+            }
+            $this->db->where($jn);
+            
+            $this->db->where("a.metode",$metode);
+            
+            
+            $in=$this->db->_compile_select();
+            $this->db->_reset_select();
+            if($tipe!='ss'){
+                $typeq=" type=$tipe";
+            }else{
+                
+                $typeq=" type NOT IN(1,8,87)";
+            }
+            $sel="SELECT SUM(total) as total FROM sv_bill_payment_detail  WHERE $typeq AND payment_id IN($in) ";
+            
+            
+            
+            return $this->db->query($sel)->row_array();
         }
 }

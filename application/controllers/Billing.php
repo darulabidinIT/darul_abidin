@@ -61,7 +61,11 @@ class Billing extends CI_Controller {
             $buttons[] = array('buat tagihan custom','add','btn');
             $buttons[] = array('separator');
             $buttons[] = array('cetak tagihan','edit','btn');
-            $buttons[] = array('rekaptagihan','edit','btn');
+            $buttons[] = array('separator');
+            $buttons[] = array('rekap tagihan pg','edit','btn');
+            $buttons[] = array('rekap tagihan tk','edit','btn');
+            $buttons[] = array('rekap tagihan sd','edit','btn');
+            $buttons[] = array('rekap tagihan smp','edit','btn');
             //$buttons[] = array('separator');
              //$buttons[] = array('edit','edit','btn');
             //$buttons[] = array('delete','delete','btn');
@@ -432,10 +436,12 @@ class Billing extends CI_Controller {
             $mess="";
             $q="SELECT * FROM sv_kelas_siswa WHERE item_spp IS NOT NULL ";
             
-            if(post('ta') && post('siswa_id')) $q.="AND ta='".post('ta')."' AND siswa_id='".post('siswa_id')."'";
-            
+            if(post('ta') && post('siswa_id')){ $q.="AND ta='".post('ta')."' AND siswa_id='".post('siswa_id')."'";}
+            else{$q.="AND ta='".ambilta()."'";}
+            $ta=(post('ta')?post('ta'):ambilta());
             
             $queries=$this->db->query($q)->result_array();
+            //lastq();
             if($mid==null){
                 //$mid=date('m');
                 $mid = date('m', strtotime('+1 month'));
@@ -452,6 +458,7 @@ class Billing extends CI_Controller {
                 $p.="WHERE id IN ($pselect) ";
             
             $periodes=$this->db->query($p)->result_array();
+            //lastq();
             foreach($periodes as $periode){
             //$periode=GetAll('bill_periode',array('real_month'=>'where/'.(int)$mid))->row_array();
             //
@@ -460,13 +467,13 @@ class Billing extends CI_Controller {
                 $sis_detail=GetAll('master_siswa',array('id'=>'where/'.$query['siswa_id']))->row_array();
                 $mid=$periode['real_month'];
                 if($periode['id']>=1 && $periode['id']<=6){
-                    $yid=substr(GetValue('start','master_tahun_ajaran',array('id'=>'where/'.post('ta'))),0,4);
+                    $yid=substr(GetValue('start','master_tahun_ajaran',array('id'=>'where/'.$ta)),0,4);
                 
                 }else{
                     
-                    $yid=substr(GetValue('end','master_tahun_ajaran',array('id'=>'where/'.post('ta'))),0,4);
+                    $yid=substr(GetValue('end','master_tahun_ajaran',array('id'=>'where/'.$ta)),0,4);
                 }
-            $es=$this->db->query("SELECT * FROM sv_bill WHERE ta='".$query['ta']."' AND periode='".$periode['id']."' AND siswa_id='".$query['siswa_id']."' AND status='unpaid'");
+            $es=$this->db->query("SELECT * FROM sv_bill WHERE ta='".$query['ta']."' AND periode='".$periode['id']."' AND siswa_id='".$query['siswa_id']."' AND (status='unpaid' OR status='paid')");
             if($es->num_rows()==0){
             $bill=array(
                 'type'=>'spp',
@@ -515,14 +522,22 @@ class Billing extends CI_Controller {
                 $mess.="SPP ".$sis_detail['nama_siswa']." ".$periode['title']."-".$yid." Sudah Ada Dibuat <br>";       
             }
         }
+        }
             $this->session->set_flashdata('message',$mess);
             redirect('billing');
         }
-        }
-        function rekap_bulan(){
-            header("Content-type: application/vnd-ms-excel");
+        function rekap_bulan($jenjang){
+                header("Content-type: application/vnd-ms-excel");
 		header("Content-Disposition: attachment; filename=Rekap-Tagihan-SPP".date('YmdHis').".xls");
-            $this->load->view('contents/billing/rekap');
+            $getsmp=GetAll('master_tingkat',array('jenjang'=>'where/'.$jenjang))->result_array();
+            foreach($getsmp as $smp){
+                $tingkat[]=$smp['id'];
+            }
+            $imp_tingkat=implode(',',$tingkat);
+            $data['getkelas']=$this->db->query("SELECT * FROM sv_master_kelas WHERE tingkat IN($imp_tingkat)")->result_array();
+            
+            
+            $this->load->view('contents/billing/rekap',$data);
         }
         function form_manual($id=null){
 		

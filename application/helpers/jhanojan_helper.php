@@ -1095,23 +1095,29 @@ if (!function_exists('tglindofull')){
 if (!function_exists('GetBulanIndo')){	
 	function GetBulanIndo($Bulan)
 	{
-		if($Bulan == "January")
+		if($Bulan == "January" || $Bulan==1)
 			$Bulan = "Januari";
-		else if($Bulan == "February")
+		else if($Bulan == "February" || $Bulan==2)
 			$Bulan = "Februari";
-		else if($Bulan == "March")
+		else if($Bulan == "March" || $Bulan==3)
 			$Bulan = "Maret";
-		else if($Bulan == "May")
+		else if($Bulan == "April" || $Bulan==4)
+			$Bulan = "April";
+		else if($Bulan == "May" || $Bulan==5)
 			$Bulan = "Mei";
-		else if($Bulan == "June")
+		else if($Bulan == "June" || $Bulan==6)
 			$Bulan = "Juni";
-		else if($Bulan == "July")
+		else if($Bulan == "July" || $Bulan==7)
 			$Bulan = "Juli";
-		else if($Bulan == "August")
+		else if($Bulan == "August" || $Bulan==8)
 			$Bulan = "Agustus";
-		else if($Bulan == "October")
+		else if($Bulan == "September" || $Bulan==9)
+			$Bulan = "September";
+		else if($Bulan == "October" || $Bulan==10)
 			$Bulan = "Oktober";
-		else if($Bulan == "December")
+		else if($Bulan == "November" || $Bulan==11)
+			$Bulan = "November";
+		else if($Bulan == "December" || $Bulan==12)
 			$Bulan = "Desember";
 
 		return $Bulan;
@@ -2386,5 +2392,58 @@ function kelas_pmb($j){
         case 5 :  return 46;
         case 6 :  return 47;
     endswitch;
+}
+function hariindo($hari=NULL){
+    if(empty($hari)) $hari=date('D');
+    
+    switch($hari){
+    case 'Sun':
+        $hari_ini = "Minggu";
+    break;
+
+    case 'Mon':         
+        $hari_ini = "Senin";
+    break;
+
+    case 'Tue':
+        $hari_ini = "Selasa";
+    break;
+
+    case 'Wed':
+        $hari_ini = "Rabu";
+    break;
+
+    case 'Thu':
+        $hari_ini = "Kamis";
+    break;
+
+    case 'Fri':
+        $hari_ini = "Jum'at";
+    break;
+
+    case 'Sat':
+        $hari_ini = "Sabtu";
+    break;
+    
+    default:
+        $hari_ini = "Tidak di ketahui";     
+    break;
+
+    }
+    return $hari_ini;
+}
+function ambil_bulan_tahun_ajaran($p=null,$t=null){
+    $CI=&get_instance();
+    
+    if($p==null && $t==null)
+        return "";
+        
+    $q=$CI->db->query("SELECT start,end FROM sv_master_tahun_ajaran WHERE id='$t'")->row_array();
+    if($p>=1 && $p<=6){
+        return GetBulanIndo(GetValue('real_month','bill_periode',array('id'=>'where/'.$p)))." ".substr($q['start'],0,4);
+    }else{
+        return  GetBulanIndo(GetValue('real_month','bill_periode',array('id'=>'where/'.$p)))." ". substr($q['end'],0,4);
+    }
+    
 }
 ?>

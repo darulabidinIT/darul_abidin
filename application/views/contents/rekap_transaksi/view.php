@@ -45,6 +45,7 @@
             
         </div>
             <button type="button" onclick="caridata()" class="btn btn-info">Search</button>
+            <button type="button" onclick="rekapsetoran()" class="btn btn-info">Rekap Setoran Hari Ini</button>
         </form>
     </fieldset>
 </div>
@@ -142,12 +143,16 @@ setInterval("$('#flex1').flexReload()",50000 );
                         });
                     }
                     function caridata(){
-                        var formdata = $('#get_rekap').serializeArray();
+                        var formdata = $('#get_rekap').serialize();
                         $('#tabledata').append("<img src='<?php echo base_url()?>assets/img/load.gif' width='5px'></img>");
                         $('#tabledata').load('<?php echo base_url()?>rekap_transaksi/load/',{fd:formdata},function(e){
                                 
                         });
                         
+                    }
+                    function rekapsetoran(){
+                        
+                        window.location = _base_url +  'rekap_transaksi/rekapsetoran/';
                     }
 </script>
 <div class="col-md-12">
