@@ -5,7 +5,7 @@
 <center><p>SMPIT DARUL ABIDIN</p></center>
 <div class="tg-wrap">
     <?php foreach($getkelas as $gk){
-        $getsiswa=$this->db->query("SELECT a.*,b.nama_siswa nama_siswa,b.nisn nisn FROM sv_kelas_siswa a LEFT JOIN sv_master_siswa b ON a.siswa_id=b.id WHERE a.ta='".ambilta()."' AND a.kelas='".$gk['id']."' ORDER BY nama_siswa ASC;")->result_array();
+        $getsiswa=$this->db->query("SELECT a.*,b.nama_siswa nama_siswa,b.nisn nisn FROM sv_kelas_siswa a LEFT JOIN sv_master_siswa b ON a.siswa_id=b.id WHERE a.ta='".ambilta()."' AND a.kelas='".$gk['id']."' ORDER BY nama_siswa ASC LIMIT 1;")->result_array();
         ?>
     <b>Kelas : <?php echo $gk['title'] ?></b>
     <table border="1" >
