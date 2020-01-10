@@ -167,6 +167,76 @@ class payment extends CI_Controller {
 		$this->load->view('layout/main',$data);
 	}
 	
+        function form_pmb($id=null){
+		
+		permissionz();
+		if($id!=NULL){
+			$filter=array('id'=>'where/'.$id);
+			$data['type']='Edit';
+			$data['list']=GetAll('sv_invoice',$filter);
+		}
+		else{
+			$data['type']='New';
+		}
+		$data['opt']=GetOptAll('menu','-Parents-');
+                
+		$data['opt_coa']=GetOptAll('setup_coa','-Account-',array('level >'=>'where/1'),'code','code','name');
+		//End Global
+		$data['history']=GetAll('sv_payment',array('invoice'=>'where/'.$id))->result_array();
+		//Attendance
+		$data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array('id'=>'where/abaceafe'));
+                $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array('id'=>'where/abaceafe'));
+		
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
+                //$ta=ambilta();
+                $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".ambilta()."' ORDER BY b.nama_siswa")->result_array();
+                $opt_all['']="-Siswa-";
+                foreach($siswa as $ss){
+                    $opt_all[$ss['siswa_id']]=$ss['nama_siswa']." <b>(".$ss['kelas_name'].")</b>";
+                }
+                $data['opt_siswa']=$opt_all;
+                
+		$data['content'] = 'contents/'.$this->utama.'/view';
+		$this->load->view('layout/main',$data);
+	}
+        
+        function form_custom($id=null){
+		
+		permissionz();
+		if($id!=NULL){
+			$filter=array('id'=>'where/'.$id);
+			$data['type']='Edit';
+			$data['list']=GetAll('sv_invoice',$filter);
+		}
+		else{
+			$data['type']='New';
+		}
+		$data['opt']=GetOptAll('menu','-Parents-');
+                
+		$data['opt_coa']=GetOptAll('setup_coa','-Account-',array('level >'=>'where/1'),'code','code','name');
+		//End Global
+		$data['history']=GetAll('sv_payment',array('invoice'=>'where/'.$id))->result_array();
+		//Attendance
+		$data['opt_tingkat']=GetOptAll('sv_master_tingkat','-All-',array('id'=>'where/abaceafe'));
+                $data['opt_kelas']=GetOptAll('sv_master_kelas','-All-',array('id'=>'where/abaceafe'));
+		
+		//$data['opt']=GetOptAll('menu','-Parents-');
+                $data['opt_ta']=GetOptAll('sv_master_tahun_ajaran','-Tahun Ajaran-',array());
+                $data['opt_jenjang']=GetOptAll('sv_master_jenjang','-All-',array());
+                //$ta=ambilta();
+                $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".ambilta()."' ORDER BY b.nama_siswa")->result_array();
+                $opt_all['']="-Siswa-";
+                foreach($siswa as $ss){
+                    $opt_all[$ss['siswa_id']]=$ss['nama_siswa']." <b>(".$ss['kelas_name'].")</b>";
+                }
+                $data['opt_siswa']=$opt_all;
+                
+		$data['content'] = 'contents/'.$this->utama.'/view';
+		$this->load->view('layout/main',$data);
+	}
+        
 	function submit(){
 		$webmaster_id=$this->session->userdata('webmaster_id');
 		$id = $this->input->post('id');

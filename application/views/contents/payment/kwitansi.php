@@ -39,7 +39,10 @@ $bill=json_decode($datapay['bill_id']);
         <td width="10%">Uang Bayar</td><td width="3%">:</td><td width="20%" colspan="3" style="font-size:11pt;"><b><?php echo Rupiah($datapay['bayar'])?></b></td>
     </tr>
     <tr>
-        <td width="10%">Kembali</td><td width="3%">:</td><td width="30%" style="font-size:11pt;"><b><?php echo Rupiah($datapay['kembali'])?></b></td><td align="center"><span style="color:grey;font-size:8pt;">-nama-</span></td><td align="center"><?php echo GetValue('name','sv_admin',array('id'=>'where/'.$datapay['created_by'])) ?></td>
+        <td width="10%">Kembali</td><td width="3%">:</td><td width="20%" colspan="3" style="font-size:11pt;"><b><?php echo Rupiah($datapay['kembali'])?></b></td>
+    </tr>
+    <tr>
+        <td width="10%">Metode</td><td width="3%">:</td><td width="30%" style="font-size:11pt;"><b><?php echo strtoupper($datapay['metode'])?></b></td><td align="center"><span style="color:grey;font-size:8pt;">-nama-</span></td><td align="center"><?php echo GetValue('name','sv_admin',array('id'=>'where/'.$datapay['created_by'])) ?></td>
     </tr>
 </table>
     

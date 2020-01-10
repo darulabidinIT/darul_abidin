@@ -344,6 +344,15 @@ if(isset($list)){
 				   <input type="text" name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>" value="<?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?>" class="col-sm-2">
 			   </div>
 		   </div>
+               
+                   <div class="form-group">
+			   <?php $nm_f="catatan";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Catatan</label>
+				   </div><div class="col-sm-9">
+                                       <textarea name="<?php echo $nm_f?>"  id="<?php echo $nm_f?>"><?php echo (isset($val[$nm_f]) ? $val[$nm_f] : '') ?></textarea>
+			   </div>
+		   </div>
            </fieldset>
            <div class="col-md-12">
              <div class="form-group">
