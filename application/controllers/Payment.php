@@ -198,7 +198,7 @@ class payment extends CI_Controller {
                 }
                 $data['opt_siswa']=$opt_all;
                 
-		$data['content'] = 'contents/'.$this->utama.'/view';
+		$data['content'] = 'contents/'.$this->utama.'/view_pmb';
 		$this->load->view('layout/main',$data);
 	}
         
@@ -297,7 +297,7 @@ class payment extends CI_Controller {
 		
 	}
     function loadbill($siswa){
-        $billing=$this->db->query("SELECT * FROM sv_bill WHERE siswa_id='$siswa' AND status='unpaid' ORDER BY id ASC ");
+        $billing=$this->db->query("SELECT * FROM sv_bill WHERE siswa_id='$siswa' AND status='unpaid' AND type!='pmb' ORDER BY id ASC ");
         $data['qbill']=$billing->result_array();
         if($billing->num_rows()>0){
             $this->load->view('contents/payment/bill_list',$data);
@@ -306,12 +306,30 @@ class payment extends CI_Controller {
          echo "Siswa Tidak Memiliki Tagihan";   
         }
     }
+    function loadbill_pmb($siswa){
+        $billing=$this->db->query("SELECT * FROM sv_bill WHERE siswa_id='$siswa' AND status='unpaid' AND type='pmb' ORDER BY id ASC ");
+        $data['qbill']=$billing->result_array();
+        if($billing->num_rows()>0){
+            $this->load->view('contents/payment/bill_list_pmb',$data);
+        }else
+        {
+         echo "Siswa Tidak Memiliki Tagihan PMB";   
+        }
+    }
     function item_bill($s){
         
         $data['qbill']=$this->db->query("SELECT * FROM sv_bill WHERE id='$s' ")->row_array();
         $data['qbilld']=$this->db->query("SELECT * FROM sv_bill_detail WHERE bill_id='$s' ")->result_array();
         $data['billprice']=$this->db->query("SELECT SUM(nominal) as price FROM sv_bill_detail WHERE bill_id='$s' ")->row_array();
         $this->load->view('contents/payment/bill_item',$data);
+        
+    }
+    function item_bill_pmb($s){
+        
+        $data['qbill']=$this->db->query("SELECT * FROM sv_bill WHERE id='$s' ")->row_array();
+        $data['qbilld']=$this->db->query("SELECT * FROM sv_bill_detail WHERE bill_id='$s' ")->result_array();
+        $data['billprice']=$this->db->query("SELECT SUM(nominal) as price FROM sv_bill_detail WHERE bill_id='$s' ")->row_array();
+        $this->load->view('contents/payment/bill_item_pmb',$data);
         
     }
     function submit_pay(){
@@ -406,6 +424,94 @@ class payment extends CI_Controller {
                             }
                         </script>";
         }
-	
+	function submit_pay_pmb(){
+        //print_mz($this->input->post());
+        $bill=$this->input->post('id_bill');
+        if(post('metode')!='void'){
+        $data['no_payment']= gen_num('pay',GetValue('no_sisda','master_siswa',array('id'=>'where/'.post('siswa'))));
+        $data['total']=str_replace('.','',$this->input->post('total'));
+        $data['bayar']=str_replace('.','',$this->input->post('bayar'));
+        $data['kembali']=str_replace('.','',$this->input->post('kembali'));
+        $data['metode']=$this->input->post('metode');
+        $data['bank']=$this->input->post('bank');
+        $data['siswa_id']=$this->input->post('siswa');
+        $data['ta']=ambilta();
+        $data['created_on']=date("Y-m-d H:i:s");
+        $data['created_by']=$this->session->userdata('webmaster_id');
+        
+        $data['bill_id']=json_encode($bill);
+        
+        $bill_imp=implode(',',$bill);
+        
+        $data['termin']=$this->db->query("SELECT id FROM sv_bill_payment WHERE bill_id LIKE '%\"$bill_imp\"%' ")->num_rows()+1;
+        
+        $this->db->insert('sv_bill_payment',$data);
+        $iid=$this->db->insert_id();
+        
+       
+        
+        if(post('kembali')>=0){
+            $this->db->query("UPDATE sv_bill SET status='paid' WHERE id IN ($bill_imp)");
+            //$billd=$this->db->query("SELECT SUM(nominal) as total,type FROM sv_bill_detail WHERE bill_id IN ($bill_imp) GROUP BY type")->result_array();
+        
+            //foreach($billd as $bd){
+            $pay_detail['payment_id']=$iid;
+            $pay_detail['type']=8;
+            $pay_detail['total']=str_replace('.','',post('bayar'));
+            $pay_detail['created_on']=date('Y-m-d H:i:s');
+            $pay_detail['created_by']=$this->session->userdata('webmaster_id');
+            
+            $this->db->insert('sv_bill_payment_detail',$pay_detail);
+            
+            //}
+        }
+        else{
+            $pay_detail['payment_id']=$iid;
+            $pay_detail['type']=8;
+            $pay_detail['total']=str_replace('.','',post('bayar'));
+            $pay_detail['created_on']=date('Y-m-d H:i:s');
+            $pay_detail['created_by']=$this->session->userdata('webmaster_id');
+            
+            $this->db->insert('sv_bill_payment_detail',$pay_detail);
+            $this->db->query("UPDATE sv_bill SET sisa='".abs(post('kembali'))."' WHERE id IN ($bill_imp)");
+        }
+        
+        redirect("payment/sumpayment_pmb/".$iid);
+        }
+        else{
+            
+            $bill=implode(',',$bill);
+            $this->db->query("UPDATE sv_bill SET status='void' WHERE id = $bill");
+            $this->session->set_flashdata('message','Tagihan Berhasil di VOID');
+            redirect('payment');
+        }
+    }
+    function item_pay_pmb($s){
+        
+        $data['qbill']=$this->db->query("SELECT * FROM sv_bill_payment WHERE bill_id LIKE '%\"$s\"%' ")->result_array();
+        //lastq();
+        //$data['qbilld']=$this->db->query("SELECT * FROM sv_bill_detail WHERE bill_id='$s' ")->result_array();
+        //$data['billprice']=$this->db->query("SELECT SUM(nominal) as price FROM sv_bill_detail WHERE bill_id='$s' ")->row_array();
+        $this->load->view('contents/payment/bill_paid_pmb',$data);
+        
+    }
+    function item_paid_pmb($s){
+        
+        $de=$this->db->query("SELECT SUM(bayar) as total FROM sv_bill_payment WHERE bill_id LIKE '%\"$s\"%' ")->row_array();
+        echo $de['total'];
+        
+    }
+    function sumpayment_pmb($id){
+         $data['datapay']=GetAll('bill_payment',array('id'=>'where/'.$id))->row_array();
+         
+         $data['history']=$this->db->query("SELECT bayar FROM sv_bill_payment WHERE bill_id LIKE '".$data['datapay']['bill_id']."' AND id !='$id' ");
+         $data['content'] = 'contents/'.$this->utama.'/view_sum_pmb';
+         $this->load->view('layout/main',$data);
+    }
+    function cetak_kwtiansi_pmb($id){
+                $data['datapay']=GetAll('bill_payment',array('id'=>'where/'.$id))->row_array();
+                $data['content'] = 'contents/'.$this->utama.'/kwitansi_pmb';
+		$this->load->view( 'contents/'.$this->utama.'/kwitansi_pmb',$data);
+    }
 }
 ?>
