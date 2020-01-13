@@ -17,7 +17,9 @@
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
 				   </div><div class="col-sm-9">
+                                        <div class="col-sm-3">
 				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ambilta()),"class='select2' id='tahun_ajaran' onchange='gantita(this.value)' disabled")?>
+                                        </div>
 			   </div>
 		   </div>
                    
@@ -27,7 +29,9 @@
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Kelas</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_kelas,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changekelas(this.value)' id='$nm_f' required")?>
+                                        <div class="col-sm-3">
+				   <?php echo form_dropdown($nm_f,$opt_kelas,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' onchange='changekelas(this.value)' id='$nm_f' required")?> 
+                                        </div>
 			   </div>
 		   </div>
                    
@@ -87,6 +91,8 @@ function detail(id) {
                         gantita($("#tahun_ajaran").val())
                     });
                     function editkelas(){
+                        $('#divkelas').empty();
+                        $('#divkelas').append("<img src='<?php echo base_url()?>assets/img/load.gif'></img>");
                         let ta = <?php echo ambilta()?>;
                         let kelas = $('#kelas').val();
                         

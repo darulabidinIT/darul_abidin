@@ -420,5 +420,87 @@ class Setup_spp_kelas extends CI_Controller {
             $data['kelas']=$this->db->query("SELECT a.*,b.nama_siswa FROM sv_kelas_siswa a left join sv_master_siswa b on a.siswa_id=b.id WHERE a.kelas='$kelas' AND a.ta='$ta' ORDER BY b.nama_siswa ASC")->result_array();
             $this->load->view('contents/setup_spp_kelas/isikelas',$data);
         }
+        function submit_spp(){
+            //print_mz($this->input->post());
+            $spp=post('spp');
+            $ks=post('ks');
+            $catering=post('catering');
+            $aj=post('antar_jemput');
+            $ekskul=post('ekskul');
+            
+            $cf1=post('customf1');
+            $cp1=post('custom1');
+            
+            $cf2=post('customf2');
+            $cp2=post('custom2');
+            $cf3=post('customf3');
+            $cp3=post('custom3');
+            $cf4=post('customf4');
+            $cp4=post('custom4');
+            $cf5=post('customf5');
+            $cp5=post('custom5');
+            $item=array();
+            foreach($spp as $k=>$v){
+                $item['item'][]=$v;
+                $item['item'][]=$ks[$k];
+                
+                $num=1;
+                if($catering[$k]!=''){
+                    $item['custom'][$num]['item']=28;
+                    $item['custom'][$num]['price']=str_replace('.','',$catering[$k]);
+                    $num++;
+                }
+                if($aj[$k]!=''){
+                    $item['custom'][$num]['item']=29;
+                    $item['custom'][$num]['price']=str_replace('.','',$aj[$k]);
+                    $num++;
+                }
+                if($ekskul[$k]!=''){
+                    $item['custom'][$num]['item']=3;
+                    $item['custom'][$num]['price']=str_replace('.','',$ekskul[$k]);
+                    $num++;
+                }
+                
+                
+                
+              if($cf1[$k]!=''||$cf2[$k]!=''||$cf3[$k]!=''||$cf4[$k]!=''||$cf5[$k]!=''){
+               if($cf1[$k]!=''){
+                $item['custom'][$num]['item']=$cf1[$k];
+                $item['custom'][$num]['price']=str_replace('.','',$cp1[$k]);
+                $num++;
+                
+               }
+               if($cf2[$k]!=''){
+                $item['custom'][$num]['item']=$cf2[$k];
+                $item['custom'][$num]['price']=str_replace('.','',$cp2[$k]);
+                $num++;
+               }
+               if($cf3[$k]!=''){
+                $item['custom'][$num]['item']=$cf3[$k];
+                $item['custom'][$num]['price']=str_replace('.','',$cp3[$k]);
+                $num++;
+               }
+               if($cf4[$k]!=''){
+                
+                $item['custom'][$num]['item']=$cf4[$k];
+                $item['custom'][$num]['price']=str_replace('.','',$cp4[$k]);
+                $num++;
+               }
+               if($cf5[$k]!=''){
+                
+                $item['custom'][$num]['item']=$cf5[$k];
+                $item['custom'][$num]['price']=str_replace('.','',$cp5[$k]);
+                $num++;
+               }
+              }
+              
+                    $spp=json_encode($item);
+                $this->db->query("UPDATE sv_kelas_siswa SET item_spp='$spp' WHERE id='$k'");
+                    unset($item);
+            }
+            //print_mz($item);
+            $this->session->set_flashdata("message", 'SPP Kelas '.post('nama_kelas').' Berhasil di Update');
+            redirect('setup_spp_kelas');
+        }
 }
 ?>

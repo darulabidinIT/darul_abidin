@@ -1,3 +1,10 @@
+<?php 
+    foreach($qpayment as $qy){
+        $qid[]=$qy->id;
+    }
+    $payment_id=implode(',',$qid);
+?>
+
 <style>
     #tablerekap{
         margin-top:10px;    
@@ -15,6 +22,10 @@
         color:black;
     }
 </style>
+<?php 
+    $detail=$this->db->query("SELECT a.type type,b.title kategori FROM sv_bill_payment_detail a LEFT JOIN sv_ref_item_custom b ON a.type=b.id WHERE a.type NOT IN(8,87,1,2,28,29,86) AND payment_id IN ($payment_id) GROUP BY a.type")->result_array();
+    //lastq();
+?>
 <div class="col-md-12">
     <button class="btn btn-success pull-right" onclick="exportTableToExcel('tablerekap','Rekap Transaksi <?php echo date('d-m-Y')?>')">Export To Excel</button></div>
     <div class="col-md-12">
@@ -34,7 +45,9 @@
         <th>Catering</th>
         <th>Antar Jemput</th>
         <th>Rumah Berbagi</th>
-        <th>School Support</th>
+        <?php foreach($detail as $dt){?>
+            <th><?php echo $dt['kategori']?></th>
+        <?php }?>
         <th>Jumlah</th>
     </tr>
     <?php foreach($qpayment as $qp){
@@ -45,7 +58,12 @@
         $catering=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='28'")->row_array();
         $anter_jemput=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='29'")->row_array();
         $rumah_berbagi=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='86'")->row_array();
-        $ss=$this->db->query("SELECT SUM(total) as total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type NOT IN(8,87,1,2,28,29,86)")->row_array();
+        
+         foreach($detail as $dt){
+         $ss[$dt['type']]=$this->db->query("SELECT SUM(total) as total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type = '".$dt['type']."'")->row_array();
+         
+         }
+         
         ?>
     <tr>
         <td><?php echo tglindo($qp->created_on)?></td>
@@ -62,7 +80,9 @@
         <td><?php echo uang($catering['total']) ?></td>
         <td><?php echo uang($anter_jemput['total']) ?></td>
         <td><?php echo uang($rumah_berbagi['total']) ?></td>
-        <td><?php echo uang($ss['total']) ?></td>
+        <?php foreach($detail as $dt){?>
+            <td><?php echo uang($ss[$dt['type']]['total'])?></td>
+        <?php }?>
         <td><?php echo uang($qp->total) ?></td>
     </tr>
     <?php }?>
