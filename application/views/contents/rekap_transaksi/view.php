@@ -143,7 +143,7 @@ setInterval("$('#flex1').flexReload()",50000 );
                         });
                     }
                     function caridata(){
-                        var formdata = $('#get_rekap').serialize();
+                        var formdata = $('#get_rekap').serializeArray();
                         $('#tabledata').append("<img src='<?php echo base_url()?>assets/img/load.gif' width='5px'></img>");
                         $('#tabledata').load('<?php echo base_url()?>rekap_transaksi/load/',{fd:formdata},function(e){
                                 

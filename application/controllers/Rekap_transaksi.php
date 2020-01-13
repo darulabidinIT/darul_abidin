@@ -515,7 +515,7 @@ class Rekap_transaksi extends CI_Controller {
             $this->load->view('contents/billing/rekap');
         }
         function load(){
-            
+            //print_mz($this->input->post());   
             foreach(post('fd') as $fd){
                 //$post[$i]['field']=$fd['name'];
                 $post[$fd['name']]=$fd['value'];
@@ -536,8 +536,8 @@ class Rekap_transaksi extends CI_Controller {
             if(!empty($post['jenjang'])) $this->db->where("g.id",$post['jenjang']);
             if(!empty($post['tingkat'])) $this->db->where("f.id",$post['tingkat']);
             if(!empty($post['periode'])) $this->db->where("a.ta",$post['periode']);
-            if(!empty($post['tgl_start'])) $this->db->where("a.created_on >= '".$post['tgl_start']."'");
-            if(!empty($post['tgl_end'])) $this->db->where("a.created_on <= '".$post['tgl_end']."'");
+            if(!empty($post['tgl_start'])) $this->db->where("a.created_on >= '".$post['tgl_start']." 00:00:00'");
+            if(!empty($post['tgl_end'])) $this->db->where("a.created_on <= '".$post['tgl_end']." 23:59:59'");
             
             $data['qpayment']=$this->db->get()->result();
             //lastq();
