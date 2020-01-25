@@ -159,6 +159,7 @@ if(isset($list)){
         var itungproduk=$('.area-item').length;
         var ta=$('#tahun_ajaran').val();
         var jenjang=$('#jenjang').val();
+        var tingkat=$('#tingkat').val();
         var idsekarang=itungproduk+1;
         if(itungproduk==0){ 
             var oi ='';

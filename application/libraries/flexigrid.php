@@ -204,12 +204,14 @@ class Flexigrid
 	 * @param	insert LIMIT in the query, true by default. This is used to strip the count query from LIMIT
 	 * @return	nothing
 	 */
-	public function build_query($limit = TRUE)
+	public function build_query($limit = TRUE,$order=TRUE)
 	{
 		if ($this->post_info['swhere'])
 			$this->CI->db->where($this->post_info['swhere']);
 	
-		$this->CI->db->order_by($this->post_info['sortname'], $this->post_info['sortorder']);
+                if($order){
+                    $this->CI->db->order_by($this->post_info['sortname'], $this->post_info['sortorder']);
+                }
 		
 		if ($limit)
 			$this->CI->db->limit($this->post_info['rp'], $this->post_info['limitstart']);

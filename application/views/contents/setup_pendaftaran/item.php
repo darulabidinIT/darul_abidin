@@ -1,7 +1,8 @@
 <?php
 $opt_item['']='-Item-';
 //lastq();
-$q="SELECT * FROM sv_setup_itempay WHERE ta='".post('t')."' AND (jenjang='all' OR jenjang='".post('j')."')";
+$q="SELECT * FROM sv_setup_itempay WHERE ta='".post('t')."' AND (jenjang='all' OR jenjang='".post('j')."') ";
+//if(post('t')!='all') $q.="AND (tingkat='all' OR tingkat='".post('t')."')";
 $item=$this->db->query($q)->result_array();
 //lastq();
 foreach($item as $i){

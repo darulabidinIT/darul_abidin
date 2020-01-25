@@ -84,7 +84,7 @@ class Setup_itempay extends CI_Controller {
             $this->db->join("ref_item_custom sv_e","sv_a.type=sv_e.id","left");
             
             $this->flexigrid->build_query();
-		//lastq();
+            //lastq();
 
             //Get contents
             $return['records'] = $this->db->get();
@@ -92,7 +92,7 @@ class Setup_itempay extends CI_Controller {
             //Build count query
             $this->db->select("count(id) as record_count");
             $this->db->from($this->utama);
-            $this->flexigrid->build_query(FALSE);
+            $this->flexigrid->build_query(FALSE,FALSE);
             $record_count = $this->db->get();
             $row = $record_count->row();
 
@@ -113,7 +113,7 @@ class Setup_itempay extends CI_Controller {
 				$z++;
 				}
 
-            $this->flexigrid->validate_post('id','ASC',$valid_fields);
+            $this->flexigrid->validate_post('tingkat_','ASC',$valid_fields);
             $records = $this->get_flexigrid();
 
             $this->output->set_header($this->config->item('json_header'));

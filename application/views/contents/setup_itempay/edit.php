@@ -83,8 +83,8 @@ if(isset($list)){
 			   <?php $nm_f="price";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Nominal</label>
-				   </div><div class="col-sm-9" id="kelasdiv">
-				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? str_replace('.',',',$val[$nm_f]) : ''),"class='currency' pattern='^\Rp \d{1,3}(.\d{3})*(\,\d+)?$' ")?>
+				   </div><div class="col-sm-9" id="">
+				   <?php echo form_input($nm_f,(isset($val[$nm_f]) ? uang(str_replace('.',',',$val[$nm_f])) : ''),"class='currency' pattern='^\Rp \d{1,3}(.\d{3})*(\,\d+)?$' ")?>
 			   </div>
 		   </div>
            

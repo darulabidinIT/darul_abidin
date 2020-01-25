@@ -2,17 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/views/contents/billing/rekap.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/index.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/system/database/DB_query_builder.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/helpers/jhanojan_helper.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/controllers/Billing.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/views/contents/rekap_transaksi/rekap.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/controllers/Rekap_transaksi.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/views/contents/rekap_transaksi/rekap_setoran.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/views/contents/billing/view.php</file>
-            <file>file:/E:/webserv/xampp_73/htdocs/darul_abidin/application/views/contents/rekap_transaksi/tabledata.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

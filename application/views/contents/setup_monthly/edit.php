@@ -90,7 +90,7 @@ if(isset($list)){
                     $data['id_data']=$val['id'];
                     $data['id']=$ct;
                     ?>
-               <div class="area-item form-group" id="area-item-<?php echo $ct?>" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><?php $this->load->view('contents/setup_pendaftaran/item_update',$data);?></div>
+               <div class="area-item form-group" id="area-item-<?php echo $ct?>" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><?php $this->load->view('contents/setup_monthly/item_update',$data);?></div>
                     
                 <?php $ct++; }?>
                <?php }?>
@@ -110,7 +110,7 @@ if(isset($list)){
                     ?>
                <div class="area-item-custom form-group" id="area-item-custom-<?php echo $ct?>" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;">
                <?php 
-                    $this->load->view('contents/setup_pendaftaran/item_custom_update',$data);?>
+                    $this->load->view('contents/setup_monthly/item_custom_update',$data);?>
                </div>
                     
                 <?php $ct++; }?>
@@ -163,6 +163,7 @@ if(isset($list)){
         var itungproduk=$('.area-item').length;
         var ta=$('#tahun_ajaran').val();
         var jenjang=$('#jenjang').val();
+        var tingkat=$('#tingkat').val();
         var idsekarang=itungproduk+1;
         if(itungproduk==0){ 
             var oi ='';
@@ -171,7 +172,7 @@ if(isset($list)){
         }
             $('#area-item').append('<div class="area-item form-group" id="area-item-'+idsekarang+'" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><img src="<?php echo base_url().'assets/img/load.gif'?>" width="100px"></div>');
             $('#tomboltambah').hide();
-            setTimeout(function(){ $('#area-item-'+idsekarang).load('<?php echo base_url()?>setup_pendaftaran/item/'+idsekarang,{t:ta,j:jenjang},function(e){
+            setTimeout(function(){ $('#area-item-'+idsekarang).load('<?php echo base_url()?>setup_monthly/item/'+idsekarang,{t:ta,j:jenjang,tg:tingkat},function(e){
                     $('#tomboltambah').show();
             }); }, 200);        
         }
@@ -180,6 +181,7 @@ if(isset($list)){
         var itungcustom=$('.area-item-custom').length;
         var ta=$('#tahun_ajaran').val();
         var jenjang=$('#jenjang').val();
+        var tingkat=$('#tingkat').val();
         var customsekarang=itungcustom+1;
         if(itungcustom==0){ 
             var oi ='';
@@ -188,7 +190,7 @@ if(isset($list)){
         }
             $('#area-item-custom').append('<div class="area-item-custom form-group" id="area-item-custom-'+customsekarang+'" style="border-bottom:1px #0044cc dashed;margin-bottom:20px;"><img src="<?php echo base_url().'assets/img/load.gif'?>" width="100px"></div>');
             $('#tomboltambahcustom').hide();
-            setTimeout(function(){ $('#area-item-custom-'+customsekarang).load('<?php echo base_url()?>setup_pendaftaran/item_custom/'+customsekarang,{t:ta,j:jenjang},function(e){
+            setTimeout(function(){ $('#area-item-custom-'+customsekarang).load('<?php echo base_url()?>setup_monthly/item_custom/'+customsekarang,{t:ta,j:jenjang,tg:tingkat},function(e){
                     $('#tomboltambahcustom').show();
             }); }, 200);        
         }

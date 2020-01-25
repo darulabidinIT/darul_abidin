@@ -302,10 +302,10 @@ class Setup_monthly extends CI_Controller {
         }
 	function loadtingkat($jenjang){
             $ids=rand(111,9999);
-            echo form_dropdown('tingkat',GetOptAll('master_tingkat','-All-',array('jenjang'=>'where/'.$jenjang)),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' id='tingkat$ids'");
+            echo form_dropdown('tingkat',GetOptAll('master_tingkat','-All-',array('jenjang'=>'where/'.$jenjang)),(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' id='tingkat'");
                        echo "<script>
                             $(document).ready(function(e){ 
-                                    $('#tingkat$ids').css('width','200px').select2({allowClear:true});
+                                    $('#tingkat').css('width','200px').select2({allowClear:true});
                                         $('#select2-multiple-style .btn').on('click', function(e){
 					var target = $(this).find('input[type=radio]');
 					var which = parseInt(target.val());
