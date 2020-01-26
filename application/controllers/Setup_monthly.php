@@ -71,7 +71,7 @@ class Setup_monthly extends CI_Controller {
             if(izin('d'))$buttons[] = array('delete','delete','btn');
             $buttons[] = array('separator');
 		
-            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record"),$colModel,'nama_lengkap','asc',$gridParams,$buttons);
+            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record"),$colModel,'tingkat_','asc',$gridParams,$buttons);
 	}
 	
 	function get_flexigrid()
@@ -92,7 +92,7 @@ class Setup_monthly extends CI_Controller {
             //Build count query
             $this->db->select("count(id) as record_count");
             $this->db->from($this->utama);
-            $this->flexigrid->build_query(FALSE);
+            $this->flexigrid->build_query(FALSE,FALSE);
             $record_count = $this->db->get();
             $row = $record_count->row();
 

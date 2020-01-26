@@ -1,6 +1,6 @@
 <?php
 $opt_item['']='-Item-';
-$lengkap=$this->db->query("SELECT * FROM sv_setup_itempay WHERE id='".$id_data."'")->row_array();
+$lengkap=$this->db->query("SELECT * FROM sv_setup_itempay WHERE id='".$item_."'")->row_array();
 //lastq();
 $q="SELECT * FROM sv_setup_itempay WHERE ta='".$lengkap['ta']."' AND (jenjang='all' OR jenjang='".$lengkap['jenjang']."') AND (tingkat='all' OR tingkat='".$lengkap['tingkat']."')";
 $item=$this->db->query($q)->result_array();

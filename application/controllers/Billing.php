@@ -432,6 +432,8 @@ class Billing extends CI_Controller {
         }
         }
         function generate_billing($id=null,$month=true,$mid=null,$yid=null){
+            set_time_limit(0);
+            ini_set("memory_limit",-1);
             //print_mz($this->input->post());
             $mess="";
             $q="SELECT * FROM sv_kelas_siswa WHERE item_spp IS NOT NULL ";
@@ -455,6 +457,7 @@ class Billing extends CI_Controller {
                 else{
                     $pselect=GetValue('id','sv_bill_periode',array('real_month'=>'where/'.$mid));
                 }
+                $pselect="1,2,3,4,5,6,7";
                 $p.="WHERE id IN ($pselect) ";
             
             $periodes=$this->db->query($p)->result_array();
