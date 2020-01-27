@@ -457,7 +457,7 @@ class Billing extends CI_Controller {
                 else{
                     $pselect=GetValue('id','sv_bill_periode',array('real_month'=>'where/'.$mid));
                 }
-                $pselect="1,2,3,4,5,6,7";
+                //$pselect="1,2,3,4,5,6,7";
                 $p.="WHERE id IN ($pselect) ";
             
             $periodes=$this->db->query($p)->result_array();
@@ -632,7 +632,7 @@ class Billing extends CI_Controller {
                         //$cekspp=$this->db->query("");
                         $siswa=GetAll('master_siswa',array('id'=>'where/'.post('siswa_id')))->row_array();
                         $bill=array(
-                            'type'=>'custom',
+                            'type'=>post('type'),
                             'ta'=>post('ta'),
                             'periode'=>post('ta'),
                             'siswa_id'=>post('siswa_id'),

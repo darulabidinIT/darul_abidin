@@ -32,6 +32,15 @@ if(isset($list)){
 				<?php echo form_hidden('redirect',isset($_GET['redirect']) ? $_GET['redirect'] : '')?>
 				<?php echo form_hidden('formid',isset($_GET['formid']) ? $_GET['formid'] : '')?>
 			
+                    <div class="form-group">
+			   
+			   <?php $nm_f="ta";?>
+			   <div class="col-sm-3">
+				   <label for="<?php echo $nm_f?>">Type</label>
+				   </div><div class="col-sm-9">
+				   <?php echo form_dropdown($nm_f,array(''=>'-Type-','custom'=>'custom','pmb'=>'PMB'),(isset($val['type']) ? $val['type'] : ambilta()),"class='select2' id='$nm_f' required")?>
+			   </div>
+		   </div>
 		    <div class="form-group">
 			   
 			   <?php $nm_f="ta";?>
