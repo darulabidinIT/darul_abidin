@@ -34,7 +34,7 @@ if(isset($list)){
 			
                     <div class="form-group">
 			   
-			   <?php $nm_f="ta";?>
+			   <?php $nm_f="type";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Type</label>
 				   </div><div class="col-sm-9">
