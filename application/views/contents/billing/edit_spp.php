@@ -47,7 +47,7 @@ if(isset($list)){
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val['ta']) ? $val['ta'] : ambilta()),"class='select2' id='$nm_f'")?>
+				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val['ta']) ? $val['ta'] : ambilta()),"class='select2' id='$nm_f' required onchange='gantita()'")?>
 			   </div>
 		   </div>
 		   
@@ -57,8 +57,7 @@ if(isset($list)){
 			   <?php $nm_f="siswa_id";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Nama</label>
-				   </div><div class="col-sm-4">
-				   <?php echo form_dropdown($nm_f,$opt_siswa,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select3' id='siswa_id'")?>
+				   </div><div class="col-sm-4" id="pilihan_nama_siswa">
 			   </div>
 		   </div>
            
@@ -233,8 +232,14 @@ if(isset($list)){
         }
         function semua(sum){
             $('#total').val(sum);
-        }$(document).ready(function(e){
+        }
+        $(document).ready(function(e){
             $('.select3').css('width','400px').select2({});
+            gantita();
         })
+        function gantita(){
+            var ta=$('#ta').val();
+            $('#pilihan_nama_siswa').load('<?php echo base_url('billing')?>/load_siswa',{t:ta});
+        }   
         
 </script>

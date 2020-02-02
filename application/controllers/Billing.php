@@ -713,5 +713,19 @@ class Billing extends CI_Controller {
             $data['id_data']=$this->input->post('id');
             $this->load->view('contents/billing/item_custom',$data);
         }
-        
+        function load_siswa(){
+            
+            
+                 $siswa=$this->db->query("SELECT sv_a.*,b.nama_siswa,c.title kelas_name FROM sv_kelas_siswa sv_a LEFT JOIN sv_master_siswa b ON sv_a.siswa_id=b.id LEFT JOIN sv_master_kelas c ON sv_a.kelas=c.id WHERE sv_a.ta='".post('t')."' ORDER BY b.nama_siswa")->result_array();
+                $opt_all['']="-Siswa-";
+                foreach($siswa as $ss){
+                    $opt_all[$ss['siswa_id']]=$ss['nama_siswa']." <b>(".$ss['kelas_name'].")</b>";
+                }
+                $opt_siswa=$opt_all;
+                echo form_dropdown('siswa_id',$opt_siswa,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select3' id='siswa_id'");
+                
+                echo "<script>$(document).ready(function(e){
+                        $('.select3').css('width','400px').select2({});
+                      })</script>";
+        }
 }
