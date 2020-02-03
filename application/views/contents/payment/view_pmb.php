@@ -17,13 +17,13 @@
     onSubmit="return confirm('Proses Transaksi Ini?');">
  <div class="col-md-5">
      <div class="col-md-12">
-                    <!--div class="form-group">
+                    <div class="form-group">
 			   
 			   <?php $nm_f="ta";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Tahun Ajaran</label>
 				   </div><div class="col-sm-9">
-				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select2' id='tahun_ajaran'")?>
+				   <?php echo form_dropdown($nm_f,$opt_ta,(isset($val[$nm_f]) ? $val[$nm_f] : ambilta()),"class='select2' id='ta' onchange='gantita()'")?>
 			   </div>
 		   </div>
                     <!--div class="form-group" style="margin-bottom:20px!important;">
@@ -59,8 +59,8 @@
 			   <?php $nm_f="siswa";?>
 			   <div class="col-sm-3">
 				   <label for="<?php echo $nm_f?>">Siswa</label>
-				   </div><div class="col-sm-9" id="siswadiv">
-				   <?php echo form_dropdown($nm_f,$opt_siswa,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select3' onchange='gantisiswa(this.value)'")?>
+				   </div><div class="col-sm-9" id="pilihan_nama_siswa">
+				   <?php //echo form_dropdown($nm_f,$opt_siswa,(isset($val[$nm_f]) ? $val[$nm_f] : ''),"class='select3' onchange='gantisiswa(this.value)'")?>
 			   </div>
 		   </div>
          
@@ -227,6 +227,7 @@ function del(id) {
                             }
         $(document).ready(function(e){
             $('.select3').css('width','400px').select2({});
+            gantita();
         })
 </script>
 
@@ -234,6 +235,11 @@ function del(id) {
   $(function() {
     $('#totalbayar').maskMoney({thousands:".",decimal:",",precision:0});
   })
+  
+        function gantita(){
+            var ta=$('#ta').val();
+            $('#pilihan_nama_siswa').load('<?php echo base_url('payment')?>/load_siswa',{t:ta});
+        }   
 </script>
 <!--div class="col-md-12"
 <div class="layout-grid">
