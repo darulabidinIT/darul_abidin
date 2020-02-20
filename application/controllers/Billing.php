@@ -21,8 +21,13 @@ class Billing extends CI_Controller {
 		//Set Global
 		//$data = GetHeaderFooter();
 		$data['content'] = 'contents/'.$this->utama.'/view';
+                
+                $siswa=(!get('siswa')?0:get('siswa'));
+                $ta=(!get('ta')?0:get('ta'));
+                $kelas=(!get('kelas')?0:get('kelas'));
+                $tipe=(!get('tipe')?0:get('tipe'));
 		
-		$data['js_grid']=$this->get_column();
+		$data['js_grid']=$this->get_column($siswa,$ta,$kelas,$tipe);
 		//$data['list']=GetAll($this->utama);
 		//End Global
 		
@@ -34,14 +39,15 @@ class Billing extends CI_Controller {
 		
             $colModel['idnya'] = array('ID',50,TRUE,'left',2,TRUE);
             $colModel['id'] = array('ID',100,TRUE,'left',2,TRUE);
-            $colModel['title'] = array('Bill',150,TRUE,'left',2);
+            $colModel['title'] = array('Bill',300,TRUE,'left',2);
+            $colModel['ta_'] = array('Tahun Ajaran',100,TRUE,'left',2);
             $colModel['siswa_'] = array('Siswa',150,TRUE,'left',2);
             $colModel['kelas_'] = array('Kelas',150,TRUE,'left',2);
             $colModel['status'] = array('Status',150,TRUE,'left',2);
 			return $colModel;
 	}
         
-	function get_column(){
+	function get_column($siswa,$ta,$kelas,$tipe){
 	
             $colModel=$this->listcol(); 
         
@@ -71,26 +77,44 @@ class Billing extends CI_Controller {
             //$buttons[] = array('delete','delete','btn');
             //$buttons[] = array('separator');
 		
-            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record"),$colModel,'id','asc',$gridParams,$buttons);
+            return $grid_js = build_grid_js('flex1',site_url($this->utama."/get_record/$siswa/$ta/$kelas/$tipe"),$colModel,'sv_a.id','asc',$gridParams,$buttons);
 	}
 	
-	function get_flexigrid()
+	function get_flexigrid($siswa,$ta,$kelas,$tipe)
         {
 
             //Build contents query
-            $this->db->select("sv_a.*,b.nama_siswa siswa_,d.title kelas_")->from('sv_bill sv_a');
+            $this->db->select("sv_a.*,b.nama_siswa siswa_,d.title kelas_,e.title ta_")->from('sv_bill sv_a');
             $this->db->join('sv_master_siswa b', "sv_a.siswa_id=b.id", 'left');
             $this->db->join('sv_kelas_siswa c', "sv_a.siswa_id=c.siswa_id and sv_a.ta=c.ta", 'left');
             $this->db->join('sv_master_kelas d', "c.kelas = d.id", 'left');
+            $this->db->join('sv_master_tahun_ajaran e', "sv_a.ta = e.id", 'left');
             $this->db->order_by('c.kelas', "asc");
             $this->db->order_by('b.nama_siswa', "asc");
+            
+            if($siswa!=0)$this->db->where('sv_a.siswa',$siswa);
+            if($ta!=0)$this->db->where('sv_a.ta',$ta);
+            if($kelas!=0)$this->db->where('c.kelas',$kelas);
+            if($tipe!=0)$this->db->where('sv_a.tipe',$tipe);
             $this->flexigrid->build_query();
 
             //Get contents
             $return['records'] = $this->db->get();
 
             //Build count query
-            $this->db->select("count(id) as record_count")->from('sv_bill');
+            //$this->db->select("count(id) as record_count")->from('sv_bill');
+            $this->db->select("count(sv_a.id) as record_count")->from('sv_bill sv_a');
+            $this->db->join('sv_master_siswa b', "sv_a.siswa_id=b.id", 'left');
+            $this->db->join('sv_kelas_siswa c', "sv_a.siswa_id=c.siswa_id and sv_a.ta=c.ta", 'left');
+            $this->db->join('sv_master_kelas d', "c.kelas = d.id", 'left');
+            $this->db->join('sv_master_tahun_ajaran e', "sv_a.ta = e.id", 'left');
+            $this->db->order_by('c.kelas', "asc");
+            $this->db->order_by('b.nama_siswa', "asc");
+            
+            if($siswa!=0)$this->db->where('sv_a.siswa',$siswa);
+            if($ta!=0)$this->db->where('sv_a.ta',$ta);
+            if($kelas!=0)$this->db->where('c.kelas',$kelas);
+            if($tipe!=0)$this->db->where('sv_a.tipe',$tipe);
             $this->flexigrid->build_query(FALSE);
             $record_count = $this->db->get();
             $row = $record_count->row();
@@ -102,13 +126,13 @@ class Billing extends CI_Controller {
             return $return;
         }
 	
-	function get_record(){
+	function get_record($siswa,$ta,$kelas,$tipe){
 		
             $colModel=$this->listcol(); 
 		$valid_fields = array('id','code','name');
 
-            $this->flexigrid->validate_post('id','DESC',$valid_fields);
-            $records = $this->get_flexigrid();
+            $this->flexigrid->validate_post('sv_a.id','DESC',$valid_fields);
+            $records = $this->get_flexigrid($siswa,$ta,$kelas,$tipe);
 
             $this->output->set_header($this->config->item('json_header'));
 

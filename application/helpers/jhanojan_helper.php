@@ -2346,6 +2346,10 @@ function post($g){
      $CI=&get_instance();
      return $CI->input->post($g);
 }
+function get($g){
+     $CI=&get_instance();
+     return $CI->input->get($g);
+}
 function uangtostr($p){
     return str_replace('.','',$p);
 }
