@@ -86,8 +86,17 @@
     </div>
     <div class="col-md-12">
         <div class="col-md-6">
+        <?php
+             if (substr($datapay['kembali'], 0, 1)=='-') {
+                $kembalian=Rupiah(substr($datapay['kembali'],1));
+        ?>
+            <div class="col-md-3"><h4>Sisa Pembayaran</h4></div>
+            <div class="col-md-3"><h4><?php echo $kembalian;?></h4></div>
+             <?php } else {
+            ?>
             <div class="col-md-3"><h4>Kembali</h4></div>
             <div class="col-md-3"><h4><?php echo Rupiah($datapay['kembali'])?></h4></div>
+            <?php } ?>
         </div>
     </div>
 </div>
