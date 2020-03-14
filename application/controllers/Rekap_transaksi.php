@@ -549,12 +549,12 @@ class Rekap_transaksi extends CI_Controller {
             $this->load->view('contents/'.$this->utama.'/tabledata.php',$data);
         }
         function rekapsetoran(){
-             $data['tk_spp_tunai']=$this->query_rekap(array(3,4),1,'cash');
-             $data['tk_spp_transfer']=$this->query_rekap(array(3,4),1,'transfer');
-             $data['tk_du_tunai']=$this->query_rekap(array(3,4),87,'cash');
-             $data['tk_du_transfer']=$this->query_rekap(array(3,4),87,'transfer');
-             $data['tk_pmb_tunai']=$this->query_rekap(array(3,4),8,'cash');
-             $data['tk_pmb_transfer']=$this->query_rekap(array(3,4),8,'transfer');
+             $data['tk_spp_tunai']=$this->query_rekap(array(2,3,4),1,'cash');
+             $data['tk_spp_transfer']=$this->query_rekap(array(2,3,4),1,'transfer');
+             $data['tk_du_tunai']=$this->query_rekap(array(2,3,4),87,'cash');
+             $data['tk_du_transfer']=$this->query_rekap(array(2,3,4),87,'transfer');
+             $data['tk_pmb_tunai']=$this->query_rekap(array(2,3,4),8,'cash');
+             $data['tk_pmb_transfer']=$this->query_rekap(array(2,3,4),8,'transfer');
              
              
              $data['sd_spp_tunai']=$this->query_rekap(5,1,'cash');
@@ -568,8 +568,8 @@ class Rekap_transaksi extends CI_Controller {
              $data['smp_pmb_transfer']=$this->query_rekap(6,8,'transfer');
              
              
-             $data['tk_ss_tunai']=$this->query_rekap(array(3,4),'ss','cash');
-             $data['tk_ss_transfer']=$this->query_rekap(array(3,4),'ss','transfer');
+             $data['tk_ss_tunai']=$this->query_rekap(array(2,3,4),'ss','cash');
+             $data['tk_ss_transfer']=$this->query_rekap(array(2,3,4),'ss','transfer');
              
              
              $data['sd_ss_tunai']=$this->query_rekap(5,'ss','cash');
@@ -597,7 +597,7 @@ class Rekap_transaksi extends CI_Controller {
             
             $this->db->where("a.created_on  BETWEEN  '".date('Y-m-d')." 00:00:00' AND '".date('Y-m-d')." 23:59:59' ");
             if(is_array($jenjang)){
-                $jn="(g.id = ".$jenjang[0]." OR g.id = ".$jenjang[1].")";
+                $jn="(g.id = ".$jenjang[0]." OR g.id = ".$jenjang[1]." OR g.id = ".$jenjang[2].")";
             }else{
                 $jn="g.id = $jenjang";
             }
