@@ -50,7 +50,9 @@
         <?php }?>
         <th>Jumlah</th>
     </tr>
-    <?php foreach($qpayment as $qp){
+    <?php 
+    $totalpayment =0;
+    foreach($qpayment as $qp){
         $biaya_masuk=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='8'")->row_array();
         $du=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='87'")->row_array();
         $spp=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='1'")->row_array();
@@ -84,8 +86,13 @@
             <td><?php echo uang($ss[$dt['type']]['total'])?></td>
         <?php }?>
         <td><?php echo uang($qp->total) ?></td>
+        <?php $totalpayment=$totalpayment+$qp->total ?>
     </tr>
     <?php }?>
+    <tr>
+        <td colspan="<?php echo $totalcol=15+count($dt) ?>">Total:</td>
+        <td><?php echo uang($totalpayment); ?></td>
+    </tr>
 </table>
     </div>
 <script>
