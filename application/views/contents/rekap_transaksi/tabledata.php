@@ -51,6 +51,13 @@
         <th>Jumlah</th>
     </tr>
     <?php 
+    $totalbiayamasuk=0;
+    $totaldu=0;
+    $totalspp=0;
+    $totalks=0;
+    $totalcatering=0;
+    $totalanjep=0;
+    $totalrmhbbg=0;
     $totalpayment =0;
     foreach($qpayment as $qp){
         $biaya_masuk=$this->db->query("SELECT total FROM sv_bill_payment_detail WHERE payment_id='".$qp->id."' AND type='8'")->row_array();
@@ -82,15 +89,43 @@
         <td><?php echo uang($catering['total']) ?></td>
         <td><?php echo uang($anter_jemput['total']) ?></td>
         <td><?php echo uang($rumah_berbagi['total']) ?></td>
+        <?php $sums=0; ?>
         <?php foreach($detail as $dt){?>
-            <td><?php echo uang($ss[$dt['type']]['total'])?></td>
+            <td><?php echo uang($ss[$dt['type']]['total']);
+                      ${"sums".$sums++}+=$ss[$dt['type']]['total'] ?></td>
         <?php }?>
         <td><?php echo uang($qp->total) ?></td>
-        <?php $totalpayment=$totalpayment+$qp->total ?>
+        <?php 
+            $totalbiayamasuk=$totalbiayamasuk+$biaya_masuk['total'];
+            $totaldu=$totaldu+$du['total'];
+            $totalspp=$totalspp+$spp['total'];
+            $totalks=$totalks+$ks['total'];
+            $totalcatering=$totalcatering+$catering['total'];
+            $totalanjep=$totalanjep+$anter_jemput['total'];
+            $totalrmhbbg=$totalrmhbbg+$rumah_berbagi['total'];
+            $num2=0;
+            foreach($detail as $dt){
+                $nume=$num2++;
+                ${"totaldetail".$nume} = ${"sums".$nume};     
+            }
+            $totalpayment=$totalpayment+$qp->total; 
+        ?>
     </tr>
     <?php }?>
     <tr>
-        <td colspan="<?php echo $totalcol=15+count($dt) ?>">Total:</td>
+        <!--<td colspan="<?php //echo $totalcol=15+count($dt) ?>">Total:</td> -->
+        <td colspan='7'></td>
+        <td><?php echo uang($totalbiayamasuk); ?></td>
+        <td><?php echo uang($totaldu); ?></td>
+        <td><?php echo uang($totalspp); ?></td>
+        <td><?php echo uang($totalks); ?></td>
+        <td><?php echo uang($totalcatering); ?></td>
+        <td><?php echo uang($totalanjep); ?></td>
+        <td><?php echo uang($totalrmhbbg); ?></td>
+        <?php $num3=0; ?>
+        <?php foreach($detail as $dt){?>
+            <td><?php echo uang(${"totaldetail".$num3++})?></td>
+        <?php }?>
         <td><?php echo uang($totalpayment); ?></td>
     </tr>
 </table>
